@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "com.mu.fishermannotes"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -77,4 +77,6 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     kapt 'com.google.dagger:hilt-compiler:2.48.1'
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
+
+    implementation 'androidx.constraintlayout:constraintlayout-compose-android:1.1.0-alpha13'
 }
