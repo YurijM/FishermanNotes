@@ -1,4 +1,4 @@
-package com.mu.fishermannotes.screens.main_screen
+package com.mu.fishermannotes.screens.main
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
@@ -8,6 +8,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.navigation.compose.rememberNavController
+import com.mu.fishermannotes.navigation.NavGraph
 import com.mu.fishermannotes.ui.theme.lightBlue100
 import com.mu.fishermannotes.ui.theme.lightBlue50
 import com.mu.fishermannotes.ui.theme.lightBlue500
@@ -16,9 +18,11 @@ import com.mu.fishermannotes.ui.theme.lightBlue500
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen() {
+    val navController = rememberNavController()
+
     Scaffold(
         bottomBar = {
-            BottomNav()
+            BottomNav(navController)
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -34,6 +38,6 @@ fun MainScreen() {
         },
         containerColor = lightBlue100
     ) {
-
+        NavGraph(navController)
     }
 }
