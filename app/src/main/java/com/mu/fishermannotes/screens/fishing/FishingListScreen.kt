@@ -1,14 +1,12 @@
 package com.mu.fishermannotes.screens.fishing
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 
 @Composable
-fun FishingListScreen(paddingBottom: Dp) {
+fun FishingListScreen() {
     /*Text(
         modifier = Modifier
             .fillMaxSize()
@@ -22,7 +20,6 @@ fun FishingListScreen(paddingBottom: Dp) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = paddingBottom)
     ) {
         items(4) {
             FishingItemScreen()
