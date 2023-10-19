@@ -21,8 +21,8 @@ fun FishingListScreen() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        items(4) {
-            FishingItemScreen()
+        items(7) {
+            FishingItem()
         }
     }
 }
