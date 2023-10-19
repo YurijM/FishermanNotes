@@ -9,10 +9,10 @@ import com.mu.fishermannotes.data.repository.fishing.FishingRepository
 import com.mu.fishermannotes.data.repository.fishing.FishingRepositoryImpl
 import com.mu.fishermannotes.data.repository.fishing_fish.FishingFishRepository
 import com.mu.fishermannotes.data.repository.fishing_fish.FishingFishRepositoryImpl
-import com.mu.fishermannotes.data.repository.fishing_photo.FishingPhotoRepository
-import com.mu.fishermannotes.data.repository.fishing_photo.FishingPhotoRepositoryImpl
 import com.mu.fishermannotes.data.repository.location.LocationRepository
 import com.mu.fishermannotes.data.repository.location.LocationRepositoryImpl
+import com.mu.fishermannotes.data.repository.location_photo.LocationPhotoRepository
+import com.mu.fishermannotes.data.repository.location_photo.LocationPhotoRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,8 +52,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFishingPhotoRepository(db: ApplicationDb): FishingPhotoRepository {
-        return FishingPhotoRepositoryImpl(db.fishingPhotoDao)
+    fun provideLocationPhotoRepository(db: ApplicationDb): LocationPhotoRepository {
+        return LocationPhotoRepositoryImpl(db.locationPhotoDao)
     }
 
     @Provides

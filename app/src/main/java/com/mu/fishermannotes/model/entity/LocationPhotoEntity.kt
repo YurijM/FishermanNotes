@@ -7,19 +7,19 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "fishing_photo_table",
-    indices = [Index(value = ["fishingId", "photoId"], unique = true)],
+    tableName = "location_photo_table",
+    indices = [Index(value = ["locationId", "photoId"], unique = true)],
     foreignKeys = [
-        ForeignKey(entity = FishingEntity::class,
+        ForeignKey(entity = LocationEntity::class,
             parentColumns = ["id"],
-            childColumns = ["fishingId"],
+            childColumns = ["locationId"],
             onDelete = CASCADE),
     ]
 )
-data class FishingPhotoEntity(
+data class LocationPhotoEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
-    val fishingId: Int,
+    val locationId: Int,
     val photoId: Int
 )
 

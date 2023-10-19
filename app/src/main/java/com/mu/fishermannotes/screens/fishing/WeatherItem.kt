@@ -26,8 +26,8 @@ fun WeatherItem() {
     ) {
         Image(
             modifier = Modifier
-                .size(32.dp),
-            painter = painterResource(id = R.drawable.sun),
+                .size(28.dp),
+            painter = painterResource(id = R.drawable.partly_cloudy),
             contentDescription = "condition"
         )
         Text(

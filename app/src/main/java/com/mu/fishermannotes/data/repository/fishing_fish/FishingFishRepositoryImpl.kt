@@ -16,6 +16,6 @@ class FishingFishRepositoryImpl(
     }
 
     override fun getFishingFish(fishingId: Int): Flow<List<FishingFishEntity>> {
-        return getFishingFish(fishingId)
+        return dao.getFishingFish(fishingId)
     }
 }

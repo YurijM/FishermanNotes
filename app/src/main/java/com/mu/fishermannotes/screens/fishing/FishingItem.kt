@@ -27,7 +27,7 @@ fun FishingItem() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 4.dp),
+            .padding(bottom = 8.dp),
         colors = CardDefaults.cardColors(
             containerColor = lightBlue50,
             contentColor = lightBlue600
