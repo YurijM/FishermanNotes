@@ -27,12 +27,13 @@ fun FishingItem() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp),
+            .padding(bottom = 12.dp),
         colors = CardDefaults.cardColors(
             containerColor = lightBlue50,
             contentColor = lightBlue600
         )
     ) {
+        TitleItem()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -41,11 +42,6 @@ fun FishingItem() {
             Column(
                 modifier = Modifier.fillMaxWidth(.5f)
             ) {
-                Text(
-                    text = "01.10.2023",
-                    //color = lightBlue600,
-                    fontWeight = FontWeight.Bold
-                )
                 WeatherItem()
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
