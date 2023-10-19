@@ -42,7 +42,6 @@ fun TitleItem() {
                 onClick = { }
             ) {
                 Icon(
-                    //modifier = Modifier.size(8.dp),
                     painter = painterResource(id = R.drawable.ic_edit),
                     contentDescription = "edit",
                     tint = lightBlue50,
@@ -54,7 +53,6 @@ fun TitleItem() {
                 onClick = { }
             ) {
                 Icon(
-                    //modifier = Modifier.size(8.dp),
                     painter = painterResource(id = R.drawable.ic_delete),
                     contentDescription = "delete",
                     tint = lightBlue50,
