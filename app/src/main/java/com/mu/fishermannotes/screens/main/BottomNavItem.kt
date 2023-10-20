@@ -10,12 +10,12 @@ sealed class BottomNavItem(
 ) {
     object FishingItem: BottomNavItem(
         item = "Рыбалка",
-        iconId = R.drawable.ic_fishing,
+        iconId = R.drawable.fishing,
         route = Routes.FISHING_LIST
     )
     object LocationItem: BottomNavItem(
         item = "Водоёмы",
-        iconId = R.drawable.ic_location,
+        iconId = R.drawable.location,
         route = Routes.LOCATION_LIST
     )
 }

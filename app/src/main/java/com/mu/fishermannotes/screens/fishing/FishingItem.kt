@@ -57,7 +57,7 @@ fun FishingItem() {
             }
             Image(
                 modifier = Modifier.fillMaxWidth(),
-                painter = painterResource(id = R.drawable.location),
+                painter = painterResource(id = R.drawable.location_default),
                 contentDescription = "location",
                 contentScale = ContentScale.Fit
             )

@@ -37,7 +37,7 @@ fun WeatherItem() {
         )
         Icon(
             modifier = Modifier.size(20.dp),
-            painter = painterResource(id = R.drawable.ic_wind_ne),
+            painter = painterResource(id = R.drawable.wind_se),
             tint = lightBlue700,
             contentDescription = "wind"
         )
