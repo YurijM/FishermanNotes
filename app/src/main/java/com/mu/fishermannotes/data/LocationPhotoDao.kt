@@ -17,7 +17,7 @@ interface LocationPhotoDao {
     suspend fun delete(itemLocationPhoto: LocationPhotoEntity)
 
     @Query(
-        "SELECT id, locationId, photoId FROM location_photo_table " +
+        "SELECT id, locationId, photoId, isMainPhoto FROM location_photo_table " +
                 "WHERE locationId = :locationId"
     )
     fun getLocationPhotos(locationId: Int): Flow<List<LocationPhotoEntity>>

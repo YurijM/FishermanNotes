@@ -18,9 +18,11 @@ interface FishingDao {
     suspend fun delete(fishing: FishingEntity)
 
     @Query(
-        "SELECT f.id, f.condition, f.date, f.moonImage, f.temperature, f.wind, f.note, l.location " +
+        "SELECT f.id, f.date, l.location, f.conditionImage, f.temperature, " +
+                "f.windImage, f.windMin, f.windMax, f.moonImage, f.note " +
                 "FROM fishing_table f " +
-                "INNER JOIN location_table l ON l.id = f.locationId"
+                "INNER JOIN location_table l ON l.id = f.locationId " +
+                "INNER JOIN location_photo_table lp ON lp.locationId = f.locationId AND lp.isMainPhoto = 1"
     )
     fun getFishing(): Flow<List<Fishing>>
 
@@ -29,10 +31,4 @@ interface FishingDao {
                 "WHERE fishingId = :fishingId"
     )
     fun deleteFishingFishByFishing(fishingId: Int)
-
-    @Query(
-        "DELETE FROM fishing_photo_table " +
-                "WHERE fishingId = :fishingId"
-    )
-    fun deleteFishingPhotosByFishing(fishingId: Int)
 }

@@ -15,7 +15,6 @@ class FishingRepositoryImpl(
     override suspend fun delete(fishing: FishingEntity) {
         dao.delete(fishing)
         fishing.id?.let { dao.deleteFishingFishByFishing(it) }
-        fishing.id?.let { dao.deleteFishingPhotosByFishing(it) }
     }
 
     override fun getFishing(): Flow<List<Fishing>> {
@@ -23,8 +22,5 @@ class FishingRepositoryImpl(
     }
 
     override fun deleteFishingFishByFishing(fishingId: Int) {
-    }
-
-    override fun deleteFishingPhotosByFishing(fishingId: Int) {
     }
 }

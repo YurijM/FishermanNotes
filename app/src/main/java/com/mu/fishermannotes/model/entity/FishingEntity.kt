@@ -20,8 +20,10 @@ data class FishingEntity(
     val id: Int? = null,
     val locationId: Int,
     val temperature: Int,
-    val condition: String,
-    val wind: String,
+    val conditionImage: Int,
+    val windImage: Int,
+    val windMin: Int,
+    val windMax: Int,
     val moonImage: Int,
     val date: String,
     val note: String

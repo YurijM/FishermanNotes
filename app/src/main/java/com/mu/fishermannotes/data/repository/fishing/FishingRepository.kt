@@ -9,5 +9,4 @@ interface FishingRepository {
     suspend fun delete(fishing: FishingEntity)
     fun getFishing(): Flow<List<Fishing>>
     fun deleteFishingFishByFishing(fishingId: Int)
-    fun deleteFishingPhotosByFishing(fishingId: Int)
 }

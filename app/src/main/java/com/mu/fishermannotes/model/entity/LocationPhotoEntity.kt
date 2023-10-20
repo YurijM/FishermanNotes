@@ -20,6 +20,7 @@ data class LocationPhotoEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     val locationId: Int,
-    val photoId: Int
+    val photoId: Int,
+    val isMainPhoto: Int
 )
 
