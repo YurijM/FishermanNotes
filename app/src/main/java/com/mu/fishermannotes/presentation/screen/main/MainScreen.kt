@@ -5,31 +5,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import com.mu.fishermannotes.presentation.component.ApplicationBar
+import com.mu.fishermannotes.presentation.component.BottomBar
 
 @Composable
 fun MainScreen() {
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()  //by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    //val navController = rememberNavController()
+    //val navBackStackEntry by navController.currentBackStackEntryAsState()  //by navController
+    // .currentBackStackEntryAsState()
+    //val currentDestination = navBackStackEntry?.destination
 
     Scaffold(
         bottomBar = {
-            /*BottomNav(
-                currentDestination,
-                YEAR_START
-            ) { route ->
-                navController.navigate(route)
-            }*/
+            BottomBar()
         },
         topBar = {
-            //ApplicationBar()
+            ApplicationBar()
         }
     ) { paddingValues ->
         Surface(
@@ -43,11 +36,6 @@ fun MainScreen() {
                 ),
         ) {
             //NavGraphMain(navController = navController)
-            Text(
-                text = "Main Screen",
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize()
-            )
         }
     }
 }
