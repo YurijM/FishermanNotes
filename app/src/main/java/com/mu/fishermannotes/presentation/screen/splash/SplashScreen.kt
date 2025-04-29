@@ -1,0 +1,130 @@
+package com.mu.fishermannotes.presentation.screen.splash
+
+import android.view.animation.OvershootInterpolator
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import com.mu.fishermannotes.R
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+
+@Composable
+fun SplashScreen(
+    toMain: () -> Unit
+) {
+    val scale = remember {
+        Animatable(0f)
+    }
+    val scaleText = remember {
+        Animatable(0f)
+    }
+
+    val developmentText = stringResource(R.string.design) + "\n"
+    val companyText = stringResource(R.string.company)
+    val text = buildAnnotatedString {
+        append("$developmentText ")
+        withStyle(
+            style = SpanStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        ) {
+            pushStringAnnotation(tag = companyText, annotation = companyText)
+            append(companyText)
+        }
+    }
+
+    LaunchedEffect (key1 = true) {
+        scale.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 3000,
+                easing = {
+                    OvershootInterpolator(14f).getInterpolation(it)
+                }
+            )
+        )
+        scaleText.animateTo(
+            targetValue = .85f,
+            animationSpec = tween(
+                durationMillis = 3000,
+                easing = {
+                    OvershootInterpolator(5f).getInterpolation(it)
+                }
+            )
+        )
+        delay(1000L)
+        toMain()
+    }
+
+    Surface (
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 28.dp)
+        ) {
+            /*Image(
+                painter = painterResource(id = R.drawable.lotto_title),
+                contentDescription = "Title",
+                modifier = Modifier.weight(1f)
+            )*/
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.weight(3f),
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.author),
+                    contentDescription = "Logo",
+                    modifier = Modifier.scale(scale.value),
+                )
+                AssistChip(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .scale(scaleText.value),
+                    onClick = {},
+                    label = {
+                        Text(text = text)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "settings"
+                        )
+                    }
+                )
+            }
+            /*Image(
+                painter = painterResource(id = R.drawable.lotto_kegs),
+                contentDescription = "Title",
+                modifier = Modifier.weight(1f)
+            )*/
+        }
+    }
+}
