@@ -7,12 +7,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.mu.fishermannotes.presentation.component.ApplicationBar
 import com.mu.fishermannotes.presentation.component.BottomBar
+import com.mu.fishermannotes.presentation.navigation.Destinations
+import com.mu.fishermannotes.presentation.navigation.NavGraph
 
 @Composable
 fun MainScreen() {
-    //val navController = rememberNavController()
+    val navController = rememberNavController()
     //val navBackStackEntry by navController.currentBackStackEntryAsState()  //by navController
     // .currentBackStackEntryAsState()
     //val currentDestination = navBackStackEntry?.destination
@@ -35,7 +38,10 @@ fun MainScreen() {
                     bottom = paddingValues.calculateBottomPadding()
                 ),
         ) {
-            //NavGraphMain(navController = navController)
+            NavGraph(
+                navController = navController,
+                startDestination = Destinations.NoteListDestination
+            )
         }
     }
 }
