@@ -7,11 +7,17 @@ plugins {
     alias(libs.plugins.dagger.hilt)
 
     alias(libs.plugins.serialization)
+
+    alias(libs.plugins.room)
 }
 
 android {
     namespace = "com.mu.fishermannotes"
     compileSdk = 35
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 
     defaultConfig {
         applicationId = "com.mu.fishermannotes"
@@ -51,6 +57,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.navigation)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.gradle.plugin)
+    implementation(libs.androidx.room.gradle.plugin)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

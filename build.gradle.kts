@@ -8,4 +8,5 @@ plugins {
     alias(libs.plugins.dagger.hilt) apply false
 
     alias(libs.plugins.serialization) apply false
+    alias(libs.plugins.room) apply false
 }

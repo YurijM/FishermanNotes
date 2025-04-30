@@ -3,4 +3,5 @@
 
     <string name="design">"Разработка"</string>
     <string name="company"><![CDATA[MU & C°]]></string>
+    <string name="notes">Заметки</string>
 </resources>
