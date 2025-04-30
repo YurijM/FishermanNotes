@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mu.fishermannotes.presentation.component.FabAdd
 import com.mu.fishermannotes.presentation.component.Title
 
 @Composable
 fun NoteListScreen(
-    viewModel: NoteListViewModel = hiltViewModel()
+    viewModel: NoteListViewModel = hiltViewModel(),
+    toNote: () -> Unit
 ) {
     if (viewModel.notes.isEmpty()) {
         Title(
@@ -35,4 +37,5 @@ fun NoteListScreen(
             }
         }
     }
+    FabAdd(onAdd = { toNote() })
 }

@@ -9,4 +9,6 @@ sealed class Destinations {
     data object MainDestination : Destinations()
     @Serializable
     data object NoteListDestination : Destinations()
+    @Serializable
+    data object NoteDestination : Destinations()
 }

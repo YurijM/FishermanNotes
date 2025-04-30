@@ -1,27 +1,21 @@
-package com.mu.fishermannotes.presentation.screen.note.list
+package com.mu.fishermannotes.presentation.screen.note
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.mu.fishermannotes.data.entity.NoteEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteListViewModel @Inject constructor(
+class NoteViewModel @Inject constructor(
     private val noteRepository: NoteRepository
 ) : ViewModel() {
-    var notes by mutableStateOf(emptyList<NoteEntity>())
+    var note by mutableStateOf(NoteEntity())
 
     init {
-        viewModelScope.launch {
-            noteRepository.getNotes().collect { list ->
-                notes = list
-            }
-        }
+
     }
 }

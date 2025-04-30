@@ -3,5 +3,12 @@
 
     <string name="design">"Разработка"</string>
     <string name="company"><![CDATA[MU & C°]]></string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+
     <string name="notes">Заметки</string>
 </resources>
