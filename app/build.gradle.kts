@@ -65,6 +65,9 @@ dependencies {
     ksp(libs.androidx.room.gradle.plugin)
     implementation(libs.androidx.room.gradle.plugin)
 
+    // Coil
+    implementation(libs.coil.compose)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
