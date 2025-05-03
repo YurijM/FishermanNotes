@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Edit
@@ -34,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +49,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -55,6 +60,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.mu.fishermannotes.R
 import com.mu.fishermannotes.presentation.component.OkAndCancel
+import com.mu.fishermannotes.presentation.component.OutlinedTextField
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
 import com.mu.fishermannotes.presentation.utils.asDate
@@ -63,13 +69,15 @@ import com.mu.fishermannotes.presentation.utils.toLog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
-    viewModel: NoteViewModel = hiltViewModel()
+    viewModel: NoteViewModel = hiltViewModel(),
+    toNoteList: () -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = viewModel.note.date
     )
-    var expanded by remember {mutableStateOf(false)}
+    var expanded by remember { mutableStateOf(false) }
+
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -79,6 +87,10 @@ fun NoteScreen(
             toLog("uri: $uri")
             //onSelect(imageUri!!)
         }
+    }
+
+    LaunchedEffect(key1 = viewModel.exit) {
+        if (viewModel.exit) toNoteList()
     }
 
     Box(
@@ -112,6 +124,79 @@ fun NoteScreen(
                     date = viewModel.note.date,
                     onClick = { showDatePicker = true }
                 )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1.5f)
+                    ) {
+                        SetParameter(
+                            value = viewModel.note.temperature,
+                            label = stringResource(R.string.temperature),
+                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteTemperatureChange(newValue)) }
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 12.dp)
+                    ) {
+                        SetParameter(
+                            value = viewModel.note.wing,
+                            label = stringResource(R.string.wing),
+                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteWingChange(newValue)) }
+                        )
+                    }
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1.5f)
+                    ) {
+                        SetParameter(
+                            value = viewModel.note.pressure,
+                            label = "${stringResource(R.string.pressure)} (мм рт.ст.)",
+                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
+                        )
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 12.dp)
+                    ) {
+                        SetParameter(
+                            value = viewModel.note.moon,
+                            label = stringResource(R.string.moon),
+                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
+                        )
+                    }
+                }
+                OutlinedTextField(
+                    value = viewModel.note.note,
+                    label = stringResource(R.string.note),
+                    onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteNoteChange(newValue)) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.NumberPassword,
+                    ),
+                    height = 160.dp,
+                    singleLine = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 8.dp,
+                            vertical = 4.dp
+                        )
+                )
+
                 Text(
                     text = stringResource(R.string.add_photo),
                     textDecoration = TextDecoration.Underline,
@@ -168,15 +253,16 @@ fun NoteScreen(
                             )
                             HorizontalDivider(thickness = 1.dp)
                             DropdownMenuItem(
-                                text = { Text(
-                                    text = buildAnnotatedString {
-                                        append(stringResource(R.string.view))
-                                        withStyle(
-                                            style = SpanStyle(fontSize = 12.sp)
-                                        ) {
-                                            append(" (двойной щелчок)")
-                                        }
-                                    })
+                                text = {
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            append(stringResource(R.string.view))
+                                            withStyle(
+                                                style = SpanStyle(fontSize = 12.sp)
+                                            ) {
+                                                append(" (двойной щелчок)")
+                                            }
+                                        })
                                 },
                                 onClick = {
                                     expanded = false
@@ -204,8 +290,9 @@ fun NoteScreen(
                 )*/
                 OkAndCancel(
                     titleOk = stringResource(R.string.save),
-                    onOK = { },
-                    onCancel = { },
+                    enabledOk = true,
+                    onOK = { viewModel.onEvent(NoteEvent.OnNoteSave) },
+                    onCancel = { toNoteList() },
                 )
             }
         }
@@ -253,4 +340,25 @@ private fun SetDate(
             )
         }
     }
+}
+
+@Composable
+private fun SetParameter(
+    value: String,
+    label: String,
+    onChange: (String) -> Unit
+) {
+    Text(label)
+    OutlinedTextField(
+        value = value,
+        onChange = { newValue -> onChange(newValue) },
+        textAlign = TextAlign.Center,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.NumberPassword,
+        ),
+        height = 40.dp,
+        modifier = Modifier
+            .padding(4.dp)
+            .width(40.dp)
+    )
 }

@@ -22,6 +22,8 @@ class NoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
     var note by mutableStateOf(NoteEntity())
+    var exit by mutableStateOf(false)
+        private set
 
     init {
         val id = savedStateHandle.toRoute<NoteDestination>().id
@@ -43,6 +45,24 @@ class NoteViewModel @Inject constructor(
         when (event) {
             is NoteEvent.OnNoteDateChange -> {
                 note = note.copy(date = event.date)
+            }
+            is NoteEvent.OnNoteTemperatureChange -> {
+                note = note.copy(temperature = event.temperature)
+            }
+            is NoteEvent.OnNoteWingChange -> {
+                note = note.copy(wing = event.wing)
+            }
+            is NoteEvent.OnNotePressureChange -> {
+                note = note.copy(pressure = event.pressure)
+            }
+            is NoteEvent.OnNoteMoonChange -> {
+                note = note.copy(moon = event.moon)
+            }
+            is NoteEvent.OnNoteNoteChange -> {
+                note = note.copy(note = event.note)
+            }
+            is NoteEvent.OnNoteSave -> {
+                exit = true
             }
         }
     }

@@ -15,4 +15,9 @@
     <string name="add_photo">Добавить фото</string>
     <string name="make_to_main">Сделать главным</string>
     <string name="view">Просмотреть</string>
+    <string name="temperature">Температура</string>
+    <string name="wing">Ветер</string>
+    <string name="moon">Луна</string>
+    <string name="pressure">Давление</string>
+    <string name="note">Заметка</string>
 </resources>

@@ -5,8 +5,12 @@ import androidx.navigation.compose.composable
 import com.mu.fishermannotes.presentation.navigation.Destinations
 import com.mu.fishermannotes.presentation.screen.note.NoteScreen
 
-fun NavGraphBuilder.note() {
+fun NavGraphBuilder.note(
+    toNoteList: () -> Unit
+) {
     composable<Destinations.NoteDestination> {
-        NoteScreen()
+        NoteScreen(
+            toNoteList = toNoteList
+        )
     }
 }

@@ -7,6 +7,7 @@ import com.mu.fishermannotes.presentation.navigation.Destinations.SplashDestinat
 import com.mu.fishermannotes.presentation.navigation.destination.main.main
 import com.mu.fishermannotes.presentation.navigation.destination.main.navigationToMain
 import com.mu.fishermannotes.presentation.navigation.destination.note.navigationToNote
+import com.mu.fishermannotes.presentation.navigation.destination.note.navigationToNoteList
 import com.mu.fishermannotes.presentation.navigation.destination.note.note
 import com.mu.fishermannotes.presentation.navigation.destination.note.noteList
 import com.mu.fishermannotes.presentation.navigation.destination.splash.splash
@@ -29,6 +30,8 @@ fun NavGraph(
                 navController.navigationToNote(args)
             }
         )
-        note()
+        note(
+            toNoteList = { navController.navigationToNoteList() }
+        )
     }
 }
