@@ -12,16 +12,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mu.fishermannotes.presentation.component.FabAdd
 import com.mu.fishermannotes.presentation.component.Title
+import com.mu.fishermannotes.presentation.navigation.Destinations.NoteDestination
+import com.mu.fishermannotes.presentation.utils.NEW_ID
+import com.mu.fishermannotes.presentation.utils.asDate
 
 @Composable
 fun NoteListScreen(
     viewModel: NoteListViewModel = hiltViewModel(),
-    toNote: () -> Unit
+    toNote: (NoteDestination) -> Unit
 ) {
     if (viewModel.notes.isEmpty()) {
         Title(
             title = "Ни одна заметка ещё не добавлена",
-            paddingValues = PaddingValues(
+            padding = PaddingValues(
                 horizontal = 16.dp,
                 vertical = 40.dp
             )
@@ -33,9 +36,9 @@ fun NoteListScreen(
                 .padding(horizontal = 8.dp)
         ) {
             items(viewModel.notes) { note ->
-                Text(note.photoPath)
+                Text(note.date.asDate())
             }
         }
     }
-    FabAdd(onAdd = { toNote() })
+    FabAdd(onAdd = { toNote(NoteDestination(NEW_ID)) })
 }

@@ -16,7 +16,7 @@ fun Title(
     title: String,
     align: TextAlign = TextAlign.Center,
     color: Color = MaterialTheme.colorScheme.primary,
-    paddingValues: PaddingValues = PaddingValues(vertical = 4.dp)
+    padding: PaddingValues = PaddingValues(vertical = 4.dp)
 ) {
     Text(
         text = title,
@@ -25,6 +25,6 @@ fun Title(
         textAlign = align,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(paddingValues)
+            .padding(padding)
     )
 }

@@ -10,5 +10,5 @@ sealed class Destinations {
     @Serializable
     data object NoteListDestination : Destinations()
     @Serializable
-    data object NoteDestination : Destinations()
+    data class NoteDestination(val id: Long) : Destinations()
 }

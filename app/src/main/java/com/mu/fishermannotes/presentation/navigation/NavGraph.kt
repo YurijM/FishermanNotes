@@ -25,7 +25,9 @@ fun NavGraph(
         )
         main()
         noteList(
-            toNote = { navController.navigationToNote() }
+            toNote = { args ->
+                navController.navigationToNote(args)
+            }
         )
         note()
     }

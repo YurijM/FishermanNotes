@@ -89,15 +89,15 @@ fun SplashScreen(
                 .fillMaxSize()
                 .padding(vertical = 28.dp)
         ) {
-            /*Image(
-                painter = painterResource(id = R.drawable.lotto_title),
+            Image(
+                painter = painterResource(id = R.drawable.fish),
                 contentDescription = "Title",
                 modifier = Modifier.weight(1f)
-            )*/
+            )
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(3f),
+                modifier = Modifier.weight(2f),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.author),

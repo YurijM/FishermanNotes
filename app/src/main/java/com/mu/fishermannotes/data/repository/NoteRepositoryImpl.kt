@@ -12,6 +12,10 @@ class NoteRepositoryImpl(
         return dao.getNotes()
     }
 
+    override fun getNote(id: Long): Flow<NoteEntity> {
+        return dao.getNote(id)
+    }
+
     override suspend fun insert(note: NoteEntity): Long {
         return dao.insert(note)
     }
