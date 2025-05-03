@@ -59,10 +59,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.mu.fishermannotes.R
+import com.mu.fishermannotes.presentation.component.DialogText
 import com.mu.fishermannotes.presentation.component.OkAndCancel
 import com.mu.fishermannotes.presentation.component.OutlinedTextField
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
+import com.mu.fishermannotes.presentation.utils.NEW_ID
 import com.mu.fishermannotes.presentation.utils.asDate
 import com.mu.fishermannotes.presentation.utils.toLog
 
@@ -77,6 +79,7 @@ fun NoteScreen(
         initialSelectedDateMillis = viewModel.note.date
     )
     var expanded by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf(false) }
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
@@ -85,11 +88,16 @@ fun NoteScreen(
         if (uri != null) {
             imageUri = uri
             toLog("uri: $uri")
-            //onSelect(imageUri!!)
         }
     }
 
-    LaunchedEffect(key1 = viewModel.exit) {
+    LaunchedEffect(key1 = viewModel.note) {
+        toLog("note: ${viewModel.note}")
+        if (viewModel.executeLauncher) {
+            launcher.launch("image/*")
+            viewModel.onEvent(NoteEvent.OnNoteExecuteLauncherChange(false))
+        }
+
         if (viewModel.exit) toNoteList()
     }
 
@@ -201,7 +209,11 @@ fun NoteScreen(
                     text = stringResource(R.string.add_photo),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
-                        launcher.launch("image/*")
+                        if (viewModel.note.id != NEW_ID) {
+                            launcher.launch("image/*")
+                        } else {
+                            openDialog = true
+                        }
                     },
                 )
                 if (imageUri != null) {
@@ -307,6 +319,20 @@ fun NoteScreen(
                 showDatePicker = false
             },
             onClickCancel = { showDatePicker = false }
+        )
+    }
+    if (openDialog) {
+        DialogText(
+            text = "Заметка ещё не сохранена, чтобы добавить фото надо сначала сохранить заметку. Сохранить?",
+            showCancel = true,
+            onDismiss = {},
+            titleOK = stringResource(R.string.yes),
+            titleCancel = stringResource(R.string.no),
+            onOK = {
+                viewModel.onEvent(NoteEvent.OnNoteSave)
+                openDialog = false
+            },
+            onCancel = { openDialog = false },
         )
     }
 }

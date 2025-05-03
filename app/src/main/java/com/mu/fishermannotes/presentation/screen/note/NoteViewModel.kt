@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mu.fishermannotes.data.entity.NoteEntity
+import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
 import com.mu.fishermannotes.presentation.navigation.Destinations.NoteDestination
 import com.mu.fishermannotes.presentation.utils.NEW_ID
@@ -22,6 +23,9 @@ class NoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
     var note by mutableStateOf(NoteEntity())
+    var photos by mutableStateOf(emptyList<NotePhotoEntity>())
+    var executeLauncher by mutableStateOf(false)
+        private set
     var exit by mutableStateOf(false)
         private set
 
@@ -36,6 +40,11 @@ class NoteViewModel @Inject constructor(
             viewModelScope.launch {
                 noteRepository.getNote(id).collect { item ->
                     note = item
+                }
+            }
+            viewModelScope.launch {
+                noteRepository.getPhotos(id).collect { list ->
+                    photos = list
                 }
             }
         }
@@ -61,8 +70,18 @@ class NoteViewModel @Inject constructor(
             is NoteEvent.OnNoteNoteChange -> {
                 note = note.copy(note = event.note)
             }
+            is NoteEvent.OnNoteExecuteLauncherChange -> {
+                executeLauncher = event.executeLauncher
+            }
             is NoteEvent.OnNoteSave -> {
-                exit = true
+                viewModelScope.launch {
+                    val id = noteRepository.insert(note)
+
+                    exit = note.id != NEW_ID
+                    executeLauncher = note.id == NEW_ID
+
+                    note = note.copy(id = id)
+                }
             }
         }
     }
