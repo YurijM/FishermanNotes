@@ -2,12 +2,21 @@ package com.mu.fishermannotes.data.repository
 
 import com.mu.fishermannotes.data.dao.NoteDao
 import com.mu.fishermannotes.data.entity.NoteEntity
+import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
 
 class NoteRepositoryImpl(
     private val dao: NoteDao
 ) : NoteRepository {
+    override fun getPhotos(noteId: Long): Flow<List<NotePhotoEntity>> {
+        return dao.getPhotos(noteId)
+    }
+
+    override suspend fun insertPhoto(photo: NotePhotoEntity): Long {
+        return dao.insertPhoto(photo)
+    }
+
     override fun getNotes(): Flow<List<NoteEntity>> {
         return dao.getNotes()
     }
