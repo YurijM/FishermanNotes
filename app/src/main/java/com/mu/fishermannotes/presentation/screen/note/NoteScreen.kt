@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -56,9 +58,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.mu.fishermannotes.R
+import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.presentation.component.DialogText
 import com.mu.fishermannotes.presentation.component.OkAndCancel
 import com.mu.fishermannotes.presentation.component.OutlinedTextField
@@ -87,12 +91,12 @@ fun NoteScreen(
     ) { uri ->
         if (uri != null) {
             imageUri = uri
-            toLog("uri: $uri")
         }
     }
 
     LaunchedEffect(key1 = viewModel.note) {
         toLog("note: ${viewModel.note}")
+        toLog("photos: ${viewModel.photos}")
         if (viewModel.executeLauncher) {
             launcher.launch("image/*")
             viewModel.onEvent(NoteEvent.OnNoteExecuteLauncherChange(false))
@@ -216,8 +220,26 @@ fun NoteScreen(
                         }
                     },
                 )
+
+                LazyRow {
+                    items(viewModel.photos) { photo ->
+                        ShowPhoto(
+                            photo,
+                            expanded,
+                            onClick = { value -> expanded = value }
+                        )
+                    }
+                }
                 if (imageUri != null) {
-                    Box(
+                    viewModel.onEvent(
+                        NoteEvent.OnNotePhotoSave(
+                            NotePhotoEntity(
+                                noteId = viewModel.note.id,
+                                photoPath = imageUri.toString()
+                            )
+                        )
+                    )
+                    /*Box(
                         contentAlignment = Alignment.TopEnd,
                         modifier = Modifier.clickable(
                             onClick = { expanded = true }
@@ -290,7 +312,7 @@ fun NoteScreen(
                                 modifier = Modifier.height(24.dp)
                             )
                         }
-                    }
+                    }*/
                 }
                 HorizontalDivider(
                     thickness = 1.dp,
@@ -387,4 +409,83 @@ private fun SetParameter(
             .padding(4.dp)
             .width(40.dp)
     )
+}
+
+@Composable
+private fun ShowPhoto(
+    photo: NotePhotoEntity,
+    expanded: Boolean,
+    onClick: (Boolean) -> Unit
+) {
+    val uri = photo.photoPath.toUri()
+    toLog("ShowPhoto - uri: $uri")
+    Box(
+        contentAlignment = Alignment.TopEnd,
+        modifier = Modifier.clickable(
+            onClick = { onClick(true) }
+        ),
+
+        ) {
+        Image(
+            //painter = rememberAsyncImagePainter(model = photo.photoPath),
+            painter = rememberAsyncImagePainter(model = uri),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(
+                    top = 4.dp,
+                    bottom = 8.dp,
+                )
+                //.requiredSize(dimensionResource(id = R.dimen.profile_photo_size))
+                .requiredSize(50.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop,
+            //alpha = .75f
+        )
+        if (photo.isMain) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = "check",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(
+                        top = 8.dp,
+                        end = 4.dp
+                    )
+                    .size(12.dp)
+                    .background(Color.White)
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { onClick(false) },
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.make_to_main)) },
+                onClick = { onClick(false) },
+                modifier = Modifier.height(24.dp)
+            )
+            HorizontalDivider(thickness = 1.dp)
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = buildAnnotatedString {
+                            append(stringResource(R.string.view))
+                            withStyle(
+                                style = SpanStyle(fontSize = 12.sp)
+                            ) {
+                                append(" (двойной щелчок)")
+                            }
+                        })
+                },
+                onClick = { onClick(false) },
+                modifier = Modifier.height(24.dp)
+            )
+            HorizontalDivider(thickness = 1.dp)
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.delete)) },
+                onClick = { onClick(false) },
+                modifier = Modifier.height(24.dp)
+            )
+        }
+    }
 }

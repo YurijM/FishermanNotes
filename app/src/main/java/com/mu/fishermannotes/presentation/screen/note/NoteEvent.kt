@@ -1,5 +1,7 @@
 package com.mu.fishermannotes.presentation.screen.note
 
+import com.mu.fishermannotes.data.entity.NotePhotoEntity
+
 sealed class NoteEvent {
     data class OnNoteDateChange(val date: Long) : NoteEvent()
     data class OnNoteTemperatureChange(val temperature: String) : NoteEvent()
@@ -8,5 +10,6 @@ sealed class NoteEvent {
     data class OnNoteMoonChange(val moon: String) : NoteEvent()
     data class OnNoteNoteChange(val note: String) : NoteEvent()
     data class OnNoteExecuteLauncherChange(val executeLauncher: Boolean) : NoteEvent()
+    data class OnNotePhotoSave(val photo: NotePhotoEntity) : NoteEvent()
     data object OnNoteSave : NoteEvent()
 }

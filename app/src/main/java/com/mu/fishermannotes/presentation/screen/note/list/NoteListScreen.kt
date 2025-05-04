@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,7 +13,7 @@ import com.mu.fishermannotes.presentation.component.FabAdd
 import com.mu.fishermannotes.presentation.component.Title
 import com.mu.fishermannotes.presentation.navigation.Destinations.NoteDestination
 import com.mu.fishermannotes.presentation.utils.NEW_ID
-import com.mu.fishermannotes.presentation.utils.asDate
+import com.mu.fishermannotes.presentation.utils.toLog
 
 @Composable
 fun NoteListScreen(
@@ -35,8 +34,13 @@ fun NoteListScreen(
                 .fillMaxSize()
                 .padding(horizontal = 8.dp)
         ) {
+            toLog("NoteListScreen-photos: ${viewModel.photos}")
             items(viewModel.notes) { note ->
-                Text(note.date.asDate())
+                NoteListItemScreen(
+                    note,
+                    viewModel.photos.find { it.noteId == note.id },
+                    onClick = { toNote(NoteDestination(note.id)) }
+                )
             }
         }
     }

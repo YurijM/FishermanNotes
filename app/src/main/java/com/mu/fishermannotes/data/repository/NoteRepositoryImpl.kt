@@ -9,8 +9,16 @@ import kotlinx.coroutines.flow.Flow
 class NoteRepositoryImpl(
     private val dao: NoteDao
 ) : NoteRepository {
+    override fun getMainPhotos(): Flow<List<NotePhotoEntity>> {
+        return dao.getMainPhotos()
+    }
+
     override fun getPhotos(noteId: Long): Flow<List<NotePhotoEntity>> {
         return dao.getPhotos(noteId)
+    }
+
+    override suspend fun update(note: NoteEntity): Long {
+        return dao.update(note)
     }
 
     override suspend fun insertPhoto(photo: NotePhotoEntity): Long {

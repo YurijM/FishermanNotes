@@ -8,6 +8,8 @@ interface NoteRepository {
     fun getNotes(): Flow<List<NoteEntity>>
     fun getNote(id: Long): Flow<NoteEntity>
     fun getPhotos(noteId: Long): Flow<List<NotePhotoEntity>>
+    fun getMainPhotos(): Flow<List<NotePhotoEntity>>
     suspend fun insertPhoto(photo: NotePhotoEntity): Long
     suspend fun insert(note: NoteEntity): Long
+    suspend fun update(note: NoteEntity): Long
 }
