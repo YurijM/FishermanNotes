@@ -36,9 +36,10 @@ fun NoteListScreen(
         ) {
             toLog("NoteListScreen-photos: ${viewModel.photos}")
             items(viewModel.notes) { note ->
+                val photo = viewModel.photos.find { it.noteId == note.id }
                 NoteListItemScreen(
                     note,
-                    viewModel.photos.find { it.noteId == note.id },
+                    photo,
                     onClick = { toNote(NoteDestination(note.id)) }
                 )
             }

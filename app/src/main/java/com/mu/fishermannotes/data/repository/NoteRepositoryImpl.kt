@@ -17,7 +17,7 @@ class NoteRepositoryImpl(
         return dao.getPhotos(noteId)
     }
 
-    override suspend fun update(note: NoteEntity): Long {
+    override suspend fun update(note: NoteEntity): Int {
         return dao.update(note)
     }
 

@@ -13,7 +13,6 @@ import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
 import com.mu.fishermannotes.presentation.navigation.Destinations.NoteDestination
 import com.mu.fishermannotes.presentation.utils.NEW_ID
-import com.mu.fishermannotes.presentation.utils.toLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -34,7 +33,6 @@ class NoteViewModel @Inject constructor(
 
     init {
         noteId = savedStateHandle.toRoute<NoteDestination>().id
-        toLog("noteId: $noteId")
 
         if (noteId == NEW_ID) {
             note = NoteEntity(
@@ -91,26 +89,49 @@ class NoteViewModel @Inject constructor(
             }
 
             is NoteEvent.OnNoteSave -> {
-                exit = noteId != NEW_ID
-                executeLauncher = noteId == NEW_ID
-                toLog("OnNoteSave-noteId: $noteId")
-
+                executeLauncher = event.beforePhotoSave
                 if (noteId == NEW_ID) {
                     viewModelScope.launch {
                         noteId = noteRepository.insert(note)
                         note = note.copy(id = noteId)
                     }
-
-                    viewModelScope.launch {
-                        noteRepository.getPhotos(noteId).collect { list ->
-                            photos = list
+                    if (event.beforePhotoSave) {
+                        viewModelScope.launch {
+                            noteRepository.getPhotos(noteId).collect { list ->
+                                photos = list
+                            }
                         }
+                    } else {
+                        exit = true
                     }
                 } else {
+                    exit = true
                     viewModelScope.launch {
                         noteRepository.update(note)
                     }
                 }
+                /*if (noteId == NEW_ID) {
+                    executeLauncher = event.beforePhotoSave
+
+                    viewModelScope.launch {
+                        noteId = noteRepository.insert(note)
+                        note = note.copy(id = noteId)
+                    }
+                    if (event.beforePhotoSave) {
+                        viewModelScope.launch {
+                            noteRepository.getPhotos(noteId).collect { list ->
+                                photos = list
+                            }
+                        }
+                    } else {
+                        exit = true
+                    }
+                } else {
+                    exit = true
+                    viewModelScope.launch {
+                        val id = noteRepository.update(note)
+                    }
+                }*/
             }
         }
     }

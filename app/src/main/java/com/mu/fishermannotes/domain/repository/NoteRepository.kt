@@ -11,5 +11,5 @@ interface NoteRepository {
     fun getMainPhotos(): Flow<List<NotePhotoEntity>>
     suspend fun insertPhoto(photo: NotePhotoEntity): Long
     suspend fun insert(note: NoteEntity): Long
-    suspend fun update(note: NoteEntity): Long
+    suspend fun update(note: NoteEntity): Int
 }

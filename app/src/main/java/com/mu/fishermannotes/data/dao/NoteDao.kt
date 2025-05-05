@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.mu.fishermannotes.data.entity.NoteEntity
 import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +32,6 @@ interface NoteDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(note: NoteEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun update(note: NoteEntity): Long
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun update(note: NoteEntity): Int
 }

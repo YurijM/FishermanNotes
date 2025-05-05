@@ -55,6 +55,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -82,7 +83,7 @@ fun NoteScreen(
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = viewModel.note.date
     )
-    var expanded by remember { mutableStateOf(false) }
+    //var expanded by remember { mutableStateOf(false) }
     var openDialog by remember { mutableStateOf(false) }
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -91,12 +92,23 @@ fun NoteScreen(
     ) { uri ->
         if (uri != null) {
             imageUri = uri
+
+            //if (imageUri != null) {
+                viewModel.onEvent(
+                    NoteEvent.OnNotePhotoSave(
+                        NotePhotoEntity(
+                            noteId = viewModel.note.id,
+                            photoPath = imageUri.toString()
+                        )
+                    )
+                )
+            //}
         }
     }
 
-    LaunchedEffect(key1 = viewModel.note) {
-        toLog("note: ${viewModel.note}")
-        toLog("photos: ${viewModel.photos}")
+    LaunchedEffect(key1 = viewModel.note, key2 = viewModel.exit) {
+        toLog("exit: ${viewModel.exit}")
+        toLog("executeLauncher: ${viewModel.executeLauncher}")
         if (viewModel.executeLauncher) {
             launcher.launch("image/*")
             viewModel.onEvent(NoteEvent.OnNoteExecuteLauncherChange(false))
@@ -107,7 +119,9 @@ fun NoteScreen(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
         Card(
             elevation = CardDefaults.cardElevation(
@@ -116,7 +130,6 @@ fun NoteScreen(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
-            modifier = Modifier.fillMaxWidth(.9f)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -143,7 +156,7 @@ fun NoteScreen(
                     Row(
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1.5f)
+                        modifier = Modifier.weight(1.75f)
                     ) {
                         SetParameter(
                             value = viewModel.note.temperature,
@@ -170,11 +183,12 @@ fun NoteScreen(
                     Row(
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1.5f)
+                        modifier = Modifier.weight(1.75f)
                     ) {
                         SetParameter(
                             value = viewModel.note.pressure,
                             label = "${stringResource(R.string.pressure)} (мм рт.ст.)",
+                            width = 48.dp,
                             onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
                         )
                     }
@@ -223,96 +237,8 @@ fun NoteScreen(
 
                 LazyRow {
                     items(viewModel.photos) { photo ->
-                        ShowPhoto(
-                            photo,
-                            expanded,
-                            onClick = { value -> expanded = value }
-                        )
+                        ShowPhoto(photo)
                     }
-                }
-                if (imageUri != null) {
-                    viewModel.onEvent(
-                        NoteEvent.OnNotePhotoSave(
-                            NotePhotoEntity(
-                                noteId = viewModel.note.id,
-                                photoPath = imageUri.toString()
-                            )
-                        )
-                    )
-                    /*Box(
-                        contentAlignment = Alignment.TopEnd,
-                        modifier = Modifier.clickable(
-                            onClick = { expanded = true }
-                        ),
-
-                        ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = imageUri),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(
-                                    top = 4.dp,
-                                    bottom = 8.dp,
-                                )
-                                //.requiredSize(dimensionResource(id = R.dimen.profile_photo_size))
-                                .requiredSize(50.dp)
-                                .clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop,
-                            //alpha = .75f
-                        )
-                        if (true) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = "check",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .padding(
-                                        top = 8.dp,
-                                        end = 4.dp
-                                    )
-                                    .size(12.dp)
-                                    .background(Color.White)
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.make_to_main)) },
-                                onClick = {
-                                    expanded = false
-                                },
-                                modifier = Modifier.height(24.dp)
-                            )
-                            HorizontalDivider(thickness = 1.dp)
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = buildAnnotatedString {
-                                            append(stringResource(R.string.view))
-                                            withStyle(
-                                                style = SpanStyle(fontSize = 12.sp)
-                                            ) {
-                                                append(" (двойной щелчок)")
-                                            }
-                                        })
-                                },
-                                onClick = {
-                                    expanded = false
-                                },
-                                modifier = Modifier.height(24.dp)
-                            )
-                            HorizontalDivider(thickness = 1.dp)
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.delete)) },
-                                onClick = {
-                                    expanded = false
-                                },
-                                modifier = Modifier.height(24.dp)
-                            )
-                        }
-                    }*/
                 }
                 HorizontalDivider(
                     thickness = 1.dp,
@@ -325,7 +251,7 @@ fun NoteScreen(
                 OkAndCancel(
                     titleOk = stringResource(R.string.save),
                     enabledOk = true,
-                    onOK = { viewModel.onEvent(NoteEvent.OnNoteSave) },
+                    onOK = { viewModel.onEvent(NoteEvent.OnNoteSave(false)) },
                     onCancel = { toNoteList() },
                 )
             }
@@ -351,7 +277,7 @@ fun NoteScreen(
             titleOK = stringResource(R.string.yes),
             titleCancel = stringResource(R.string.no),
             onOK = {
-                viewModel.onEvent(NoteEvent.OnNoteSave)
+                viewModel.onEvent(NoteEvent.OnNoteSave(true))
                 openDialog = false
             },
             onCancel = { openDialog = false },
@@ -394,6 +320,7 @@ private fun SetDate(
 private fun SetParameter(
     value: String,
     label: String,
+    width: Dp = 40.dp,
     onChange: (String) -> Unit
 ) {
     Text(label)
@@ -407,25 +334,22 @@ private fun SetParameter(
         height = 40.dp,
         modifier = Modifier
             .padding(4.dp)
-            .width(40.dp)
+            .width(width)
     )
 }
 
 @Composable
 private fun ShowPhoto(
-    photo: NotePhotoEntity,
-    expanded: Boolean,
-    onClick: (Boolean) -> Unit
+    photo: NotePhotoEntity
 ) {
+    var expanded by remember { mutableStateOf(false) }
     val uri = photo.photoPath.toUri()
-    toLog("ShowPhoto - uri: $uri")
     Box(
         contentAlignment = Alignment.TopEnd,
         modifier = Modifier.clickable(
-            onClick = { onClick(true) }
+            onClick = { expanded = true }
         ),
-
-        ) {
+    ) {
         Image(
             //painter = rememberAsyncImagePainter(model = photo.photoPath),
             painter = rememberAsyncImagePainter(model = uri),
@@ -433,6 +357,8 @@ private fun ShowPhoto(
             modifier = Modifier
                 .padding(
                     top = 4.dp,
+                    start = 4.dp,
+                    end = 4.dp,
                     bottom = 8.dp,
                 )
                 //.requiredSize(dimensionResource(id = R.dimen.profile_photo_size))
@@ -457,12 +383,12 @@ private fun ShowPhoto(
         }
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { onClick(false) },
+            onDismissRequest = { expanded = false },
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.make_to_main)) },
-                onClick = { onClick(false) },
-                modifier = Modifier.height(24.dp)
+                onClick = { expanded = false },
+                //modifier = Modifier.height(24.dp)
             )
             HorizontalDivider(thickness = 1.dp)
             DropdownMenuItem(
@@ -477,14 +403,14 @@ private fun ShowPhoto(
                             }
                         })
                 },
-                onClick = { onClick(false) },
-                modifier = Modifier.height(24.dp)
+                onClick = { expanded = false },
+                //modifier = Modifier.height(24.dp)
             )
             HorizontalDivider(thickness = 1.dp)
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete)) },
-                onClick = { onClick(false) },
-                modifier = Modifier.height(24.dp)
+                onClick = { expanded = false },
+                //modifier = Modifier.height(24.dp)
             )
         }
     }
