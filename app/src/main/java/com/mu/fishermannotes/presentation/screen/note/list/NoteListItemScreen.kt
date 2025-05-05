@@ -1,5 +1,7 @@
 package com.mu.fishermannotes.presentation.screen.note.list
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,7 +43,13 @@ fun NoteListItemScreen(
     photo: NotePhotoEntity?,
     onClick: () -> Unit
 ) {
-    val uri = photo?.photoPath?.toUri()
+	val context = LocalContext.current
+	//val uri = Uri.parse("content://media/picker/0/com.android.providers.media.photopicker/media/1000000020")
+	val uri = photo?.photoPath?.toUri()
+    /*if (uri != null)
+	    context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)*/
+
+    //val uri = photo?.photoPath?.toUri()
     toLog("uri: $uri")
     Card(
         elevation = CardDefaults.cardElevation(
