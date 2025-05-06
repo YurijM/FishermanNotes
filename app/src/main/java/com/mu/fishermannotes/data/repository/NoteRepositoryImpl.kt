@@ -17,6 +17,10 @@ class NoteRepositoryImpl(
         return dao.getPhotos(noteId)
     }
 
+    override suspend fun setMainPhoto(noteId: Long, id: Long) {
+        dao.setMainPhoto(noteId, id)
+    }
+
     override suspend fun update(note: NoteEntity): Int {
         return dao.update(note)
     }

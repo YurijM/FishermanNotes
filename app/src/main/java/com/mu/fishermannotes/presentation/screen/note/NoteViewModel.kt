@@ -88,6 +88,12 @@ class NoteViewModel @Inject constructor(
                 }
             }
 
+            is NoteEvent.OnNoteSetMainPhoto -> {
+                viewModelScope.launch {
+                    noteRepository.setMainPhoto(event.noteId, event.id)
+                }
+            }
+
             is NoteEvent.OnNoteSave -> {
                 executeLauncher = event.beforePhotoSave
                 if (noteId == NEW_ID) {
@@ -110,28 +116,6 @@ class NoteViewModel @Inject constructor(
                         noteRepository.update(note)
                     }
                 }
-                /*if (noteId == NEW_ID) {
-                    executeLauncher = event.beforePhotoSave
-
-                    viewModelScope.launch {
-                        noteId = noteRepository.insert(note)
-                        note = note.copy(id = noteId)
-                    }
-                    if (event.beforePhotoSave) {
-                        viewModelScope.launch {
-                            noteRepository.getPhotos(noteId).collect { list ->
-                                photos = list
-                            }
-                        }
-                    } else {
-                        exit = true
-                    }
-                } else {
-                    exit = true
-                    viewModelScope.launch {
-                        val id = noteRepository.update(note)
-                    }
-                }*/
             }
         }
     }

@@ -67,8 +67,11 @@ import com.mu.fishermannotes.presentation.component.OkAndCancel
 import com.mu.fishermannotes.presentation.component.OutlinedTextField
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
+import com.mu.fishermannotes.presentation.utils.DELETE
+import com.mu.fishermannotes.presentation.utils.MAIN
 import com.mu.fishermannotes.presentation.utils.NEW_ID
 import com.mu.fishermannotes.presentation.utils.PHOTO_MENU_ITEM
+import com.mu.fishermannotes.presentation.utils.VIEW
 import com.mu.fishermannotes.presentation.utils.asDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -233,7 +236,22 @@ fun NoteScreen(
 
                 LazyRow {
                     items(viewModel.photos) { photo ->
-                        ShowPhoto(photo)
+                        ShowPhoto(
+                            photo,
+                            onClick = { value ->
+                                when (value) {
+                                    MAIN ->
+                                        viewModel.onEvent(
+                                            NoteEvent.OnNoteSetMainPhoto(
+                                                noteId = photo.noteId,
+                                                id = photo.id
+                                            )
+                                        )
+                                    VIEW -> {}
+                                    DELETE -> {}
+                                }
+                            }
+                        )
                     }
                 }
                 HorizontalDivider(
@@ -336,7 +354,8 @@ private fun SetParameter(
 
 @Composable
 private fun ShowPhoto(
-    photo: NotePhotoEntity
+    photo: NotePhotoEntity,
+    onClick: (Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(
@@ -377,10 +396,13 @@ private fun ShowPhoto(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            PHOTO_MENU_ITEM.forEach { item ->
+            PHOTO_MENU_ITEM.forEachIndexed { idx, item ->
                 DropdownMenuItem(
                     text = { Text(item) },
-                    onClick = { expanded = false },
+                    onClick = {
+                        onClick(idx)
+                        expanded = false
+                    },
                     //modifier = Modifier.height(24.dp)
                 )
                 if (item != PHOTO_MENU_ITEM.last())

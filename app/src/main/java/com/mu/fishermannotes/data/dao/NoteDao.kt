@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.mu.fishermannotes.data.entity.NoteEntity
 import com.mu.fishermannotes.data.entity.NotePhotoEntity
@@ -26,6 +27,16 @@ interface NoteDao {
             "WHERE note_id = :noteId")
     fun getPhotos(noteId: Long): Flow<List<NotePhotoEntity>>
 
+    @Query("UPDATE table_photos " +
+            "SET is_main = 0 " +
+            "WHERE note_id = :noteId")
+    suspend fun clearMainPhoto(noteId: Long)
+
+    @Query("UPDATE table_photos " +
+            "SET is_main = 1 " +
+            "WHERE id = :id")
+    suspend fun updateMainPhoto(id: Long)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPhoto(photo: NotePhotoEntity): Long
 
@@ -34,4 +45,11 @@ interface NoteDao {
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun update(note: NoteEntity): Int
+
+    @Transaction
+    suspend fun setMainPhoto(noteId: Long, id: Long) {
+        clearMainPhoto(noteId)
+        updateMainPhoto(id)
+    }
+
 }
