@@ -68,6 +68,7 @@ import com.mu.fishermannotes.presentation.component.OutlinedTextField
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
 import com.mu.fishermannotes.presentation.utils.NEW_ID
+import com.mu.fishermannotes.presentation.utils.PHOTO_MENU_ITEM
 import com.mu.fishermannotes.presentation.utils.asDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -357,7 +358,6 @@ private fun ShowPhoto(
                 .requiredSize(dimensionResource(id = R.dimen.small_size_photo))
                 .clip(RoundedCornerShape(8.dp)),
             contentScale = ContentScale.Crop,
-            //alpha = .75f
         )
         if (photo.isMain) {
             Icon(
@@ -366,8 +366,8 @@ private fun ShowPhoto(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .padding(
-                        top = 8.dp,
-                        end = 4.dp
+                        top = 12.dp,
+                        end = 12.dp,
                     )
                     .size(12.dp)
                     .background(Color.White)
@@ -377,23 +377,15 @@ private fun ShowPhoto(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.make_to_main)) },
-                onClick = { expanded = false },
-                //modifier = Modifier.height(24.dp)
-            )
-            HorizontalDivider(thickness = 1.dp)
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.view)) },
-                onClick = { expanded = false },
-                //modifier = Modifier.height(24.dp)
-            )
-            HorizontalDivider(thickness = 1.dp)
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.delete)) },
-                onClick = { expanded = false },
-                //modifier = Modifier.height(24.dp)
-            )
+            PHOTO_MENU_ITEM.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = { expanded = false },
+                    //modifier = Modifier.height(24.dp)
+                )
+                if (item != PHOTO_MENU_ITEM.last())
+                    HorizontalDivider(thickness = 1.dp)
+            }
         }
     }
 }
