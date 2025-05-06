@@ -81,9 +81,7 @@ fun NoteScreen(
     toNoteList: () -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = viewModel.note.date
-    )
+    val datePickerState = rememberDatePickerState()
     var openDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -108,6 +106,8 @@ fun NoteScreen(
     }
 
     LaunchedEffect(key1 = viewModel.note, key2 = viewModel.exit) {
+        datePickerState.selectedDateMillis = viewModel.note.date
+
         if (viewModel.executeLauncher) {
             launcher.launch("image/*")
             viewModel.onEvent(NoteEvent.OnNoteExecuteLauncherChange(false))
@@ -144,7 +144,7 @@ fun NoteScreen(
                     thickness = 1.dp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
-                SetDate(
+                ShowDate(
                     date = viewModel.note.date,
                     onClick = { showDatePicker = true }
                 )
@@ -187,7 +187,6 @@ fun NoteScreen(
                         SetParameter(
                             value = viewModel.note.pressure,
                             label = "${stringResource(R.string.pressure)} (мм рт.ст.)",
-                            width = 48.dp,
                             onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
                         )
                     }
@@ -210,7 +209,7 @@ fun NoteScreen(
                     label = stringResource(R.string.note),
                     onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteNoteChange(newValue)) },
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.NumberPassword,
+                        keyboardType = KeyboardType.Text,
                     ),
                     height = 160.dp,
                     singleLine = false,
@@ -300,7 +299,7 @@ fun NoteScreen(
 }
 
 @Composable
-private fun SetDate(
+private fun ShowDate(
     date: Long,
     onClick: () -> Unit
 ) {
@@ -334,7 +333,7 @@ private fun SetDate(
 private fun SetParameter(
     value: String,
     label: String,
-    width: Dp = 40.dp,
+    width: Dp = 48.dp,
     onChange: (String) -> Unit
 ) {
     Text(label)
@@ -343,7 +342,7 @@ private fun SetParameter(
         onChange = { newValue -> onChange(newValue) },
         textAlign = TextAlign.Center,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.NumberPassword,
+            keyboardType = KeyboardType.Password,
         ),
         height = 40.dp,
         modifier = Modifier

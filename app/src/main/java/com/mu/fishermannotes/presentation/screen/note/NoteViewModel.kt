@@ -40,13 +40,13 @@ class NoteViewModel @Inject constructor(
             )
         } else {
             viewModelScope.launch {
-                noteRepository.getPhotos(noteId).collect { list ->
-                    photos = list.sortedByDescending { it.isMain }
+                noteRepository.getNote(noteId).collect { item ->
+                    note = item
                 }
             }
             viewModelScope.launch {
-                noteRepository.getNote(noteId).collect { item ->
-                    note = item
+                noteRepository.getPhotos(noteId).collect { list ->
+                    photos = list.sortedByDescending { it.isMain }
                 }
             }
         }
