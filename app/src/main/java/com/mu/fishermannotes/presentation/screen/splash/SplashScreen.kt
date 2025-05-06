@@ -90,7 +90,7 @@ fun SplashScreen(
                 .padding(vertical = 28.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.author),
+                painter = painterResource(id = R.drawable.fish),
                 contentDescription = "Title",
                 modifier = Modifier.weight(1f)
             )

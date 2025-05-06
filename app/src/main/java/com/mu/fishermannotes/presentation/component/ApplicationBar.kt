@@ -42,7 +42,7 @@ fun ApplicationBar() {
                         letterSpacing = .15.em
                     )
                     Image(
-                        painter = painterResource(id = R.drawable.author),
+                        painter = painterResource(id = R.drawable.fish),
                         contentDescription = null,
                         modifier = Modifier.padding(vertical = 4.dp),
                         contentScale = ContentScale.FillHeight,

@@ -13,7 +13,7 @@
 
     <string name="notes">Заметки</string>
     <string name="add_photo">Добавить фото</string>
-    <string name="make_to_main">Сделать главным</string>
+    <string name="make_to_main">Сделать фото главным</string>
     <string name="view">Просмотреть</string>
     <string name="temperature">Температура</string>
     <string name="wing">Ветер</string>
