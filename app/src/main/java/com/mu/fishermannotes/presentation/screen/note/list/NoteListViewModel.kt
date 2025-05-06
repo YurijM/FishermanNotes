@@ -22,7 +22,7 @@ class NoteListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             noteRepository.getNotes().collect { list ->
-                notes = list
+                notes = list.sortedByDescending { it.date }
             }
         }
         viewModelScope.launch {

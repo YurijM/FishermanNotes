@@ -284,7 +284,7 @@ fun NoteScreen(
     }
     if (openDialog) {
         DialogText(
-            text = "Заметка ещё не сохранена, чтобы добавить фото надо сначала сохранить заметку.\n\t\t\tСохранить?",
+            text = "Заметка ещё не сохранена, чтобы добавить фото надо сначала сохранить заметку.\n\tСохранить?",
             showCancel = true,
             onDismiss = {},
             titleOK = stringResource(R.string.yes),

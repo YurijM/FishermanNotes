@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -50,13 +51,15 @@ fun NoteListItemScreen(
                 .padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
             Image(
-                painter = rememberAsyncImagePainter(model = photo?.photoPath?.toUri()),
+                painter = if (photo != null)
+                    rememberAsyncImagePainter(model = photo.photoPath.toUri())
+                else
+                    painterResource(R.drawable.fishing),
                 contentDescription = null,
                 modifier = Modifier
                     .requiredSize(dimensionResource(id = R.dimen.medium_size_photo))
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop,
-                //alpha = .75f
             )
 
             Text(
