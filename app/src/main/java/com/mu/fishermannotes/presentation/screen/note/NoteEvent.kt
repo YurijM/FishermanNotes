@@ -11,6 +11,7 @@ sealed class NoteEvent {
     data class OnNoteNoteChange(val note: String) : NoteEvent()
     data class OnNoteExecuteLauncherChange(val executeLauncher: Boolean) : NoteEvent()
     data class OnNotePhotoSave(val photo: NotePhotoEntity) : NoteEvent()
+    data class OnNotePhotoDelete(val photo: NotePhotoEntity) : NoteEvent()
     data class OnNoteSetMainPhoto(val noteId: Long, val id: Long) : NoteEvent()
     data class OnNoteSave(val beforePhotoSave: Boolean) : NoteEvent()
 }

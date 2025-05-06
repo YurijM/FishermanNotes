@@ -248,7 +248,7 @@ fun NoteScreen(
                                             )
                                         )
                                     VIEW -> {}
-                                    DELETE -> {}
+                                    DELETE -> viewModel.onEvent(NoteEvent.OnNotePhotoDelete(photo))
                                 }
                             }
                         )

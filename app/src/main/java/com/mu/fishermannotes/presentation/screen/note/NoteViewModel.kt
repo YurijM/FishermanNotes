@@ -88,6 +88,12 @@ class NoteViewModel @Inject constructor(
                 }
             }
 
+            is NoteEvent.OnNotePhotoDelete -> {
+                viewModelScope.launch {
+                    noteRepository.deletePhoto(event.photo)
+                }
+            }
+
             is NoteEvent.OnNoteSetMainPhoto -> {
                 viewModelScope.launch {
                     noteRepository.setMainPhoto(event.noteId, event.id)
