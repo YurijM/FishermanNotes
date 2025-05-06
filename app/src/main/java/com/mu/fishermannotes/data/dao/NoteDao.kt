@@ -1,6 +1,7 @@
 package com.mu.fishermannotes.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -39,6 +40,9 @@ interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPhoto(photo: NotePhotoEntity): Long
+
+    @Delete
+    suspend fun deletePhoto(photo: NotePhotoEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(note: NoteEntity): Long

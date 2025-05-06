@@ -17,6 +17,10 @@ class NoteRepositoryImpl(
         return dao.getPhotos(noteId)
     }
 
+    override suspend fun deletePhoto(photo: NotePhotoEntity) {
+        dao.deletePhoto(photo)
+    }
+
     override suspend fun setMainPhoto(noteId: Long, id: Long) {
         dao.setMainPhoto(noteId, id)
     }
