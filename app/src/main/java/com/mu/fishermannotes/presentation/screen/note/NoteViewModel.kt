@@ -101,13 +101,13 @@ class NoteViewModel @Inject constructor(
             }
 
             is NoteEvent.OnNoteSave -> {
-                executeLauncher = event.beforePhotoSave
+                executeLauncher = event.firstPhoto
                 if (noteId == NEW_ID) {
                     viewModelScope.launch {
                         noteId = noteRepository.insert(note)
                         note = note.copy(id = noteId)
                     }
-                    if (event.beforePhotoSave) {
+                    if (event.firstPhoto) {
                         viewModelScope.launch {
                             noteRepository.getPhotos(noteId).collect { list ->
                                 photos = list

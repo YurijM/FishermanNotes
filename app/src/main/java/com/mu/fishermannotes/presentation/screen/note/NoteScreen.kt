@@ -98,7 +98,8 @@ fun NoteScreen(
                 NoteEvent.OnNotePhotoSave(
                     NotePhotoEntity(
                         noteId = viewModel.note.id,
-                        photoPath = imageUri.toString()
+                        photoPath = imageUri.toString(),
+                        isMain = viewModel.photos.isEmpty()
                     )
                 )
             )

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Заметки рыбака</string>
+    <string name="app_name">Дневник рыбака</string>
 
     <string name="design">"Разработка"</string>
     <string name="company"><![CDATA[MU & C°]]></string>

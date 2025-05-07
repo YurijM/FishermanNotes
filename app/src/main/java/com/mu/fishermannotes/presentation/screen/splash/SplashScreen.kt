@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import com.mu.fishermannotes.R
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -93,6 +95,11 @@ fun SplashScreen(
                 painter = painterResource(id = R.drawable.fish),
                 contentDescription = "Title",
                 modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = stringResource(R.string.app_name),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.displaySmall,
             )
             Column(
                 verticalArrangement = Arrangement.Center,
