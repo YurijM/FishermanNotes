@@ -11,4 +11,6 @@ sealed class Destinations {
     data object NoteListDestination : Destinations()
     @Serializable
     data class NoteDestination(val id: Long) : Destinations()
+    @Serializable
+    data class PhotoDestination(val noteId: Long, val path: String) : Destinations()
 }

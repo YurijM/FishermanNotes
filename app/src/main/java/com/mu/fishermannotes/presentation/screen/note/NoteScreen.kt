@@ -67,6 +67,7 @@ import com.mu.fishermannotes.presentation.component.OkAndCancel
 import com.mu.fishermannotes.presentation.component.OutlinedTextField
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
+import com.mu.fishermannotes.presentation.navigation.Destinations.PhotoDestination
 import com.mu.fishermannotes.presentation.utils.DELETE
 import com.mu.fishermannotes.presentation.utils.MAIN
 import com.mu.fishermannotes.presentation.utils.NEW_ID
@@ -78,7 +79,8 @@ import com.mu.fishermannotes.presentation.utils.asDate
 @Composable
 fun NoteScreen(
     viewModel: NoteViewModel = hiltViewModel(),
-    toNoteList: () -> Unit
+    toNoteList: () -> Unit,
+    toPhoto: (PhotoDestination) -> Unit,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
@@ -247,7 +249,7 @@ fun NoteScreen(
                                                 id = photo.id
                                             )
                                         )
-                                    VIEW -> {}
+                                    VIEW -> { toPhoto(PhotoDestination(photo.noteId, photo.photoPath)) }
                                     DELETE -> viewModel.onEvent(NoteEvent.OnNotePhotoDelete(photo))
                                 }
                             }

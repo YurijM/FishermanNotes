@@ -10,6 +10,8 @@ import com.mu.fishermannotes.presentation.navigation.destination.note.navigation
 import com.mu.fishermannotes.presentation.navigation.destination.note.navigationToNoteList
 import com.mu.fishermannotes.presentation.navigation.destination.note.note
 import com.mu.fishermannotes.presentation.navigation.destination.note.noteList
+import com.mu.fishermannotes.presentation.navigation.destination.photo.navigationToPhoto
+import com.mu.fishermannotes.presentation.navigation.destination.photo.photo
 import com.mu.fishermannotes.presentation.navigation.destination.splash.splash
 
 @Composable
@@ -31,7 +33,11 @@ fun NavGraph(
             }
         )
         note(
-            toNoteList = { navController.navigationToNoteList() }
+            toNoteList = { navController.navigationToNoteList() },
+            toPhoto = { args ->
+                navController.navigationToPhoto(args)
+            }
         )
+        photo()
     }
 }
