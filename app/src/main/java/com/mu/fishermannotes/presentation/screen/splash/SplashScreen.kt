@@ -100,6 +100,7 @@ fun SplashScreen(
                 text = stringResource(R.string.app_name),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.padding(top = 40.dp)
             )
             Column(
                 verticalArrangement = Arrangement.Center,

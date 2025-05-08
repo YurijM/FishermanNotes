@@ -13,6 +13,7 @@ import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
 import com.mu.fishermannotes.presentation.navigation.Destinations.NoteDestination
 import com.mu.fishermannotes.presentation.utils.NEW_ID
+import com.mu.fishermannotes.presentation.utils.toLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -25,16 +26,19 @@ class NoteViewModel @Inject constructor(
 ) : ViewModel() {
     var note by mutableStateOf(NoteEntity())
     var photos by mutableStateOf(emptyList<NotePhotoEntity>())
-    private var noteId by mutableLongStateOf(0L)
-    var executeLauncher by mutableStateOf(false)
+    var noteId by mutableLongStateOf(0L)
+        private set
+    var newNote by mutableStateOf(false)
         private set
     var exit by mutableStateOf(false)
         private set
 
     init {
         noteId = savedStateHandle.toRoute<NoteDestination>().id
+        toLog("start -> noteId: $noteId")
+        newNote = noteId == NEW_ID
 
-        if (noteId == NEW_ID) {
+        if (newNote) {
             note = NoteEntity(
                 date = Calendar.getInstance().timeInMillis
             )
@@ -45,8 +49,11 @@ class NoteViewModel @Inject constructor(
                 }
             }
             viewModelScope.launch {
+                toLog("getPhotos -> noteId -> before: $noteId")
+                //noteRepository.getPhotos(noteId).first()
                 noteRepository.getPhotos(noteId).collect { list ->
-                    photos = list.sortedByDescending { it.isMain }
+                    photos = list
+                    toLog("getPhotos -> noteId -> after: $noteId")
                 }
             }
         }
@@ -78,13 +85,14 @@ class NoteViewModel @Inject constructor(
                 note = note.copy(note = event.note)
             }
 
-            is NoteEvent.OnNoteExecuteLauncherChange -> {
-                executeLauncher = event.executeLauncher
-            }
-
             is NoteEvent.OnNotePhotoSave -> {
                 viewModelScope.launch {
                     noteRepository.insertPhoto(event.photo)
+
+                    if (newNote) {
+                        photos = photos.toMutableList() + event.photo
+                        toLog("OnNotePhotoSave -> photos: $photos")
+                    }
                 }
             }
 
@@ -101,20 +109,10 @@ class NoteViewModel @Inject constructor(
             }
 
             is NoteEvent.OnNoteSave -> {
-                executeLauncher = event.firstPhoto
                 if (noteId == NEW_ID) {
                     viewModelScope.launch {
                         noteId = noteRepository.insert(note)
                         note = note.copy(id = noteId)
-                    }
-                    if (event.firstPhoto) {
-                        viewModelScope.launch {
-                            noteRepository.getPhotos(noteId).collect { list ->
-                                photos = list
-                            }
-                        }
-                    } else {
-                        exit = true
                     }
                 } else {
                     exit = true

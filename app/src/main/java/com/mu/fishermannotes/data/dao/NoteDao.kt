@@ -25,7 +25,8 @@ interface NoteDao {
     fun getMainPhotos(): Flow<List<NotePhotoEntity>>
 
     @Query("SELECT * FROM table_photos " +
-            "WHERE note_id = :noteId")
+            "WHERE note_id = :noteId " +
+            "ORDER BY is_main DESC")
     fun getPhotos(noteId: Long): Flow<List<NotePhotoEntity>>
 
     @Query("UPDATE table_photos " +

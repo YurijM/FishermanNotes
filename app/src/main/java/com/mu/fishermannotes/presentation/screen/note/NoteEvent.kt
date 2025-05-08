@@ -9,9 +9,8 @@ sealed class NoteEvent {
     data class OnNotePressureChange(val pressure: String) : NoteEvent()
     data class OnNoteMoonChange(val moon: String) : NoteEvent()
     data class OnNoteNoteChange(val note: String) : NoteEvent()
-    data class OnNoteExecuteLauncherChange(val executeLauncher: Boolean) : NoteEvent()
     data class OnNotePhotoSave(val photo: NotePhotoEntity) : NoteEvent()
     data class OnNotePhotoDelete(val photo: NotePhotoEntity) : NoteEvent()
     data class OnNoteSetMainPhoto(val noteId: Long, val id: Long) : NoteEvent()
-    data class OnNoteSave(val firstPhoto: Boolean) : NoteEvent()
+    data object OnNoteSave : NoteEvent()
 }

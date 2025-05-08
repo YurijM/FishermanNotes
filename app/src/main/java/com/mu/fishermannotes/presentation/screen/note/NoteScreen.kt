@@ -74,6 +74,7 @@ import com.mu.fishermannotes.presentation.utils.NEW_ID
 import com.mu.fishermannotes.presentation.utils.PHOTO_MENU_ITEM
 import com.mu.fishermannotes.presentation.utils.VIEW
 import com.mu.fishermannotes.presentation.utils.asDate
+import com.mu.fishermannotes.presentation.utils.toLog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,9 +112,9 @@ fun NoteScreen(
     LaunchedEffect(key1 = viewModel.note, key2 = viewModel.exit) {
         datePickerState.selectedDateMillis = viewModel.note.date
 
-        if (viewModel.executeLauncher) {
+        toLog("Screen -> LaunchedEffect")
+        if (viewModel.newNote && viewModel.noteId != NEW_ID && viewModel.photos.isEmpty()) {
             launcher.launch("image/*")
-            viewModel.onEvent(NoteEvent.OnNoteExecuteLauncherChange(false))
         }
 
         if (viewModel.exit) toNoteList()
@@ -267,7 +268,7 @@ fun NoteScreen(
                 OkAndCancel(
                     titleOk = stringResource(R.string.save),
                     enabledOk = true,
-                    onOK = { viewModel.onEvent(NoteEvent.OnNoteSave(false)) },
+                    onOK = { viewModel.onEvent(NoteEvent.OnNoteSave) },
                     onCancel = { toNoteList() },
                 )
             }
@@ -293,7 +294,7 @@ fun NoteScreen(
             titleOK = stringResource(R.string.yes),
             titleCancel = stringResource(R.string.no),
             onOK = {
-                viewModel.onEvent(NoteEvent.OnNoteSave(true))
+                viewModel.onEvent(NoteEvent.OnNoteSave)
                 openDialog = false
             },
             onCancel = { openDialog = false },
