@@ -38,7 +38,8 @@ fun NoteListScreen(
                 NoteListItemScreen(
                     note,
                     photo,
-                    onClick = { toNote(NoteDestination(note.id)) }
+                    onEdit = { toNote(NoteDestination(note.id)) },
+                    onDelete = { viewModel.onEvent(NoteListEvent.OnNoteDelete(note)) },
                 )
             }
         }

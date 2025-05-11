@@ -14,4 +14,5 @@ interface NoteRepository {
     suspend fun setMainPhoto(noteId: Long, id: Long)
     suspend fun insert(note: NoteEntity): Long
     suspend fun update(note: NoteEntity): Int
+    suspend fun deleteNote(note: NoteEntity)
 }

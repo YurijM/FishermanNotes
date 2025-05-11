@@ -39,6 +39,16 @@ interface NoteDao {
             "WHERE id = :id")
     suspend fun updateMainPhoto(id: Long)
 
+    @Transaction
+    suspend fun setMainPhoto(noteId: Long, id: Long) {
+        clearMainPhoto(noteId)
+        updateMainPhoto(id)
+    }
+
+    @Query("DELETE FROM table_photos " +
+            "WHERE note_id = :noteId")
+    suspend fun deleteNotePhotos(noteId: Long)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPhoto(photo: NotePhotoEntity): Long
 
@@ -51,10 +61,13 @@ interface NoteDao {
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun update(note: NoteEntity): Int
 
+    @Delete
+    suspend fun delete(note: NoteEntity)
+
     @Transaction
-    suspend fun setMainPhoto(noteId: Long, id: Long) {
-        clearMainPhoto(noteId)
-        updateMainPhoto(id)
+    suspend fun deleteNote(note: NoteEntity) {
+        deleteNotePhotos(note.id)
+        delete(note)
     }
 
 }

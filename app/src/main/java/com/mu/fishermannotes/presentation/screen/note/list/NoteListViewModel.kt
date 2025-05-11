@@ -31,4 +31,14 @@ class NoteListViewModel @Inject constructor(
             }
         }
     }
+
+    fun onEvent(event: NoteListEvent) {
+        when (event) {
+            is NoteListEvent.OnNoteDelete -> {
+                viewModelScope.launch {
+                    noteRepository.deleteNote(event.note)
+                }
+            }
+        }
+    }
 }

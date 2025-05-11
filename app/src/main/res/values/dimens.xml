@@ -2,5 +2,5 @@
 <resources>
     <dimen name="outlined_field_height">56.dp</dimen>
     <dimen name="small_size_photo">64.dp</dimen>
-    <dimen name="medium_size_photo">96.dp</dimen>
+    <dimen name="medium_size_photo">120.dp</dimen>
 </resources>
