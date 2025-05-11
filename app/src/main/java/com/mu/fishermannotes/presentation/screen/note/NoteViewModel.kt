@@ -81,6 +81,10 @@ class NoteViewModel @Inject constructor(
                 note = note.copy(moon = event.moon)
             }
 
+            is NoteEvent.OnNoteLocationChange -> {
+                note = note.copy(location = event.location)
+            }
+
             is NoteEvent.OnNoteNoteChange -> {
                 note = note.copy(note = event.note)
             }

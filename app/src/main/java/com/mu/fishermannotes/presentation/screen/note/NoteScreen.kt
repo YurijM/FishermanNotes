@@ -21,8 +21,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Edit
@@ -67,12 +69,15 @@ import com.mu.fishermannotes.presentation.component.OkAndCancel
 import com.mu.fishermannotes.presentation.component.OutlinedTextField
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
+import com.mu.fishermannotes.presentation.component.DropDownList
 import com.mu.fishermannotes.presentation.navigation.Destinations.PhotoDestination
 import com.mu.fishermannotes.presentation.utils.DELETE
 import com.mu.fishermannotes.presentation.utils.MAIN
+import com.mu.fishermannotes.presentation.utils.MOON
 import com.mu.fishermannotes.presentation.utils.NEW_ID
 import com.mu.fishermannotes.presentation.utils.PHOTO_MENU_ITEM
 import com.mu.fishermannotes.presentation.utils.VIEW
+import com.mu.fishermannotes.presentation.utils.WINGS
 import com.mu.fishermannotes.presentation.utils.asDate
 import com.mu.fishermannotes.presentation.utils.toLog
 
@@ -124,6 +129,7 @@ fun NoteScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Card(
@@ -152,59 +158,61 @@ fun NoteScreen(
                     date = viewModel.note.date,
                     onClick = { showDatePicker = true }
                 )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1.75f)
-                    ) {
-                        SetParameter(
-                            value = viewModel.note.temperature,
-                            label = stringResource(R.string.temperature),
-                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteTemperatureChange(newValue)) }
+                OutlinedTextField(
+                    value = viewModel.note.location,
+                    label = stringResource(R.string.location),
+                    onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteLocationChange(newValue)) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                    ),
+                    height = 48.dp,
+                    singleLine = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 8.dp,
+                            vertical = 4.dp
                         )
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 12.dp)
+                )
+                Row {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
                     ) {
-                        SetParameter(
-                            value = viewModel.note.wing,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            SetParameter(
+                                value = viewModel.note.temperature,
+                                label = stringResource(R.string.temperature),
+                                onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteTemperatureChange(newValue)) }
+                            )
+                        }
+                        DropDownList(
+                            list = WINGS,
                             label = stringResource(R.string.wing),
-                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteWingChange(newValue)) }
+                            selectedItem = viewModel.note.wing,
+                            onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteWingChange(selectedItem)) }
                         )
                     }
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1.75f)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
                     ) {
-                        SetParameter(
-                            value = viewModel.note.pressure,
-                            label = "${stringResource(R.string.pressure)} (мм рт.ст.)",
-                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
-                        )
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 12.dp)
-                    ) {
-                        SetParameter(
-                            value = viewModel.note.moon,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            SetParameter(
+                                value = viewModel.note.pressure,
+                                label = stringResource(R.string.pressure),
+                                onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
+                            )
+                        }
+                        DropDownList(
+                            list = MOON,
                             label = stringResource(R.string.moon),
-                            onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
+                            selectedItem = viewModel.note.moon,
+                            onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteMoonChange(selectedItem)) }
                         )
                     }
                 }
@@ -224,7 +232,6 @@ fun NoteScreen(
                             vertical = 4.dp
                         )
                 )
-
                 Text(
                     text = stringResource(R.string.add_photo),
                     textDecoration = TextDecoration.Underline,
@@ -250,7 +257,11 @@ fun NoteScreen(
                                                 id = photo.id
                                             )
                                         )
-                                    VIEW -> { toPhoto(PhotoDestination(photo.noteId, photo.photoPath)) }
+
+                                    VIEW -> {
+                                        toPhoto(PhotoDestination(photo.noteId, photo.photoPath))
+                                    }
+
                                     DELETE -> viewModel.onEvent(NoteEvent.OnNotePhotoDelete(photo))
                                 }
                             }
