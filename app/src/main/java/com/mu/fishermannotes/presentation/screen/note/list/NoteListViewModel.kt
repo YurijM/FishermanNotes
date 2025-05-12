@@ -18,6 +18,8 @@ class NoteListViewModel @Inject constructor(
 ) : ViewModel() {
     var notes by mutableStateOf(emptyList<NoteEntity>())
     var photos by mutableStateOf(emptyList<NotePhotoEntity>())
+    var search by mutableStateOf("")
+    var noteListIsEmpty by mutableStateOf("Ни одна заметка ещё не добавлена")
 
     init {
         viewModelScope.launch {
@@ -34,6 +36,27 @@ class NoteListViewModel @Inject constructor(
 
     fun onEvent(event: NoteListEvent) {
         when (event) {
+            is NoteListEvent.OnNoteSearchChange -> {
+                search = event.search
+                if (search.isBlank()) {
+                    viewModelScope.launch {
+                        noteRepository.getNotes().collect { list ->
+                            notes = list
+                            noteListIsEmpty = "Ни одна заметка ещё не добавлена"
+                        }
+                    }
+                }
+            }
+
+            is NoteListEvent.OnNoteSearchStart -> {
+                viewModelScope.launch {
+                    noteRepository.searchNotes(search).collect { list ->
+                        notes = list
+                        noteListIsEmpty = "Ничего не найдено"
+                    }
+                }
+            }
+
             is NoteListEvent.OnNoteDelete -> {
                 viewModelScope.launch {
                     noteRepository.deleteNote(event.note)

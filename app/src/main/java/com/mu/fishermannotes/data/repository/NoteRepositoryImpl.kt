@@ -41,6 +41,10 @@ class NoteRepositoryImpl(
         return dao.getNotes()
     }
 
+    override fun searchNotes(search: String): Flow<List<NoteEntity>> {
+        return dao.searchNotes(search)
+    }
+
     override fun getNote(id: Long): Flow<NoteEntity> {
         return dao.getNote(id)
     }

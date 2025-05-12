@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     fun getNotes(): Flow<List<NoteEntity>>
+    fun searchNotes(search: String): Flow<List<NoteEntity>>
     fun getNote(id: Long): Flow<NoteEntity>
     fun getPhotos(noteId: Long): Flow<List<NotePhotoEntity>>
     fun getMainPhotos(): Flow<List<NotePhotoEntity>>

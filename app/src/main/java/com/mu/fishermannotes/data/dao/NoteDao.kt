@@ -20,6 +20,11 @@ interface NoteDao {
             "WHERE id = :id")
     fun getNote(id: Long): Flow<NoteEntity>
 
+    @Query("SELECT * FROM table_notes " +
+            "WHERE location LIKE '%' + :search + '%' " +
+            "OR note LIKE '%' + :search + '%'")
+    fun searchNotes(search: String): Flow<List<NoteEntity>>
+
     @Query("SELECT * FROM table_photos " +
             "WHERE is_main = 1")
     fun getMainPhotos(): Flow<List<NotePhotoEntity>>
@@ -69,5 +74,4 @@ interface NoteDao {
         deleteNotePhotos(note.id)
         delete(note)
     }
-
 }
