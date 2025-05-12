@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.mu.fishermannotes.data.entity.NoteEntity
 import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
+import com.mu.fishermannotes.presentation.utils.NOTE_LIST_IS_EMPTY
+import com.mu.fishermannotes.presentation.utils.NOTE_SEARCH_NOTHING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +21,7 @@ class NoteListViewModel @Inject constructor(
     var notes by mutableStateOf(emptyList<NoteEntity>())
     var photos by mutableStateOf(emptyList<NotePhotoEntity>())
     var search by mutableStateOf("")
-    var noteListIsEmpty by mutableStateOf("Ни одна заметка ещё не добавлена")
+    var noteListIsEmpty by mutableStateOf(NOTE_LIST_IS_EMPTY)
 
     init {
         viewModelScope.launch {
@@ -42,7 +44,7 @@ class NoteListViewModel @Inject constructor(
                     viewModelScope.launch {
                         noteRepository.getNotes().collect { list ->
                             notes = list
-                            noteListIsEmpty = "Ни одна заметка ещё не добавлена"
+                            noteListIsEmpty = NOTE_LIST_IS_EMPTY
                         }
                     }
                 }
@@ -52,7 +54,7 @@ class NoteListViewModel @Inject constructor(
                 viewModelScope.launch {
                     noteRepository.searchNotes(search).collect { list ->
                         notes = list
-                        noteListIsEmpty = "Ничего не найдено"
+                        noteListIsEmpty = NOTE_SEARCH_NOTHING
                     }
                 }
             }

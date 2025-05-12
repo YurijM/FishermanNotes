@@ -35,6 +35,7 @@ import com.mu.fishermannotes.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDownList(
+    modifier: Modifier = Modifier,
     list: List<String>,
     label: String,
     selectedItem: String,
@@ -58,7 +59,7 @@ fun DropDownList(
                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier
+            modifier = modifier
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                 .height(dimensionResource(R.dimen.outlined_field_height))
                 .padding(8.dp),

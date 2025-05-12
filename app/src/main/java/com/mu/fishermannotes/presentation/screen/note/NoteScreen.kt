@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -174,47 +175,41 @@ fun NoteScreen(
                             vertical = 4.dp
                         )
                 )
-                Row {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            SetParameter(
-                                value = viewModel.note.temperature,
-                                label = stringResource(R.string.temperature),
-                                onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteTemperatureChange(newValue)) }
-                            )
-                        }
-                        DropDownList(
-                            list = WINGS,
-                            label = stringResource(R.string.wing),
-                            selectedItem = viewModel.note.wing,
-                            onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteWingChange(selectedItem)) }
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            SetParameter(
-                                value = viewModel.note.pressure,
-                                label = stringResource(R.string.pressure),
-                                onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
-                            )
-                        }
-                        DropDownList(
-                            list = MOON,
-                            label = stringResource(R.string.moon),
-                            selectedItem = viewModel.note.moon,
-                            onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteMoonChange(selectedItem)) }
-                        )
-                    }
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    SetParameter(
+                        value = viewModel.note.temperature,
+                        label = stringResource(R.string.temperature),
+                        onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteTemperatureChange(newValue)) }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    SetParameter(
+                        value = viewModel.note.pressure,
+                        label = stringResource(R.string.pressure),
+                        onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    DropDownList(
+                        list = WINGS,
+                        label = stringResource(R.string.wing),
+                        selectedItem = viewModel.note.wing,
+                        onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteWingChange(selectedItem)) },
+                        modifier = Modifier.fillMaxWidth(.75f)
+                    )
+                    DropDownList(
+                        list = MOON,
+                        label = stringResource(R.string.moon),
+                        selectedItem = viewModel.note.moon,
+                        onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteMoonChange(selectedItem)) },
+                        modifier = Modifier.fillMaxWidth(.75f)
+                    )
                 }
                 OutlinedTextField(
                     value = viewModel.note.note,
@@ -271,11 +266,6 @@ fun NoteScreen(
                 HorizontalDivider(
                     thickness = 1.dp,
                 )
-                /*if (viewModel.error.isNotBlank())
-                TextError(
-                    error = viewModel.error,
-                    textAlign = TextAlign.Center
-                )*/
                 OkAndCancel(
                     titleOk = stringResource(R.string.save),
                     enabledOk = true,
