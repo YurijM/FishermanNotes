@@ -91,7 +91,9 @@ fun NoteScreen(
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
-    var openDialog by remember { mutableStateOf(false) }
+    var openDialogNewNote by remember { mutableStateOf(false) }
+    var openDialogDeletePhoto by remember { mutableStateOf(false) }
+    var selectedPhoto by remember { mutableStateOf(NotePhotoEntity()) }
 
     val context = LocalContext.current
     var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -126,153 +128,152 @@ fun NoteScreen(
         if (viewModel.exit) toNoteList()
     }
 
-    Box(
-        contentAlignment = Alignment.Center,
+    Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        Card(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            ),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Title(
+                title = "Заметка",
+                padding = PaddingValues(top = 0.dp)
+            )
+            HorizontalDivider(
+                thickness = 1.dp,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            ShowDate(
+                date = viewModel.note.date,
+                onClick = { showDatePicker = true }
+            )
+            OutlinedTextEdit(
+                value = viewModel.note.location,
+                label = stringResource(R.string.location),
+                onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteLocationChange(newValue)) },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                ),
+                height = 48.dp,
+                singleLine = false,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp)
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = 4.dp
+                    )
+            )
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Title(
-                    title = "Заметка",
-                    padding = PaddingValues(top = 0.dp)
+                SetParameter(
+                    value = viewModel.note.temperature,
+                    label = stringResource(R.string.temperature),
+                    keyboardType = KeyboardType.Password,
+                    onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteTemperatureChange(newValue)) }
                 )
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-                ShowDate(
-                    date = viewModel.note.date,
-                    onClick = { showDatePicker = true }
-                )
-                OutlinedTextEdit(
-                    value = viewModel.note.location,
-                    label = stringResource(R.string.location),
-                    onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteLocationChange(newValue)) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                    ),
-                    height = 48.dp,
-                    singleLine = false,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = 8.dp,
-                            vertical = 4.dp
-                        )
-                )
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    SetParameter(
-                        value = viewModel.note.temperature,
-                        label = stringResource(R.string.temperature),
-                        onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteTemperatureChange(newValue)) }
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    SetParameter(
-                        value = viewModel.note.pressure,
-                        label = stringResource(R.string.pressure),
-                        onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    DropDownList(
-                        list = WINGS,
-                        label = stringResource(R.string.wing),
-                        selectedItem = viewModel.note.wing,
-                        onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteWingChange(selectedItem)) },
-                        modifier = Modifier.fillMaxWidth(.75f)
-                    )
-                    DropDownList(
-                        list = MOON,
-                        label = stringResource(R.string.moon),
-                        selectedItem = viewModel.note.moon,
-                        onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteMoonChange(selectedItem)) },
-                        modifier = Modifier.fillMaxWidth(.75f)
-                    )
-                }
-                OutlinedTextEdit(
-                    value = viewModel.note.note,
-                    label = stringResource(R.string.note),
-                    onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteNoteChange(newValue)) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                    ),
-                    height = 160.dp,
-                    singleLine = false,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = 8.dp,
-                            vertical = 4.dp
-                        )
-                )
-                Text(
-                    text = stringResource(R.string.add_photo),
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.clickable {
-                        if (viewModel.note.id != NEW_ID) {
-                            launcher.launch("image/*")
-                        } else {
-                            openDialog = true
-                        }
-                    },
-                )
-
-                LazyRow {
-                    items(viewModel.photos) { photo ->
-                        ShowPhoto(
-                            photo,
-                            onClick = { value ->
-                                when (value) {
-                                    MAIN ->
-                                        viewModel.onEvent(
-                                            NoteEvent.OnNoteSetMainPhoto(
-                                                noteId = photo.noteId,
-                                                id = photo.id
-                                            )
-                                        )
-
-                                    VIEW -> {
-                                        toPhoto(PhotoDestination(photo.noteId, photo.photoPath))
-                                    }
-
-                                    DELETE -> viewModel.onEvent(NoteEvent.OnNotePhotoDelete(photo))
-                                }
-                            }
-                        )
-                    }
-                }
-                HorizontalDivider(
-                    thickness = 1.dp,
-                )
-                OkAndCancel(
-                    titleOk = stringResource(R.string.save),
-                    enabledOk = true,
-                    onOK = { viewModel.onEvent(NoteEvent.OnNoteSave) },
-                    onCancel = { toNoteList() },
+                Spacer(modifier = Modifier.width(8.dp))
+                SetParameter(
+                    value = viewModel.note.pressure,
+                    label = stringResource(R.string.pressure),
+                    keyboardType = KeyboardType.NumberPassword,
+                    onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNotePressureChange(newValue)) }
                 )
             }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                DropDownList(
+                    list = WINGS,
+                    label = stringResource(R.string.wing),
+                    selectedItem = viewModel.note.wing,
+                    onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteWingChange(selectedItem)) },
+                    modifier = Modifier.fillMaxWidth(.75f)
+                )
+                DropDownList(
+                    list = MOON,
+                    label = stringResource(R.string.moon),
+                    selectedItem = viewModel.note.moon,
+                    onClick = { selectedItem -> viewModel.onEvent(NoteEvent.OnNoteMoonChange(selectedItem)) },
+                    modifier = Modifier.fillMaxWidth(.75f)
+                )
+            }
+            OutlinedTextEdit(
+                value = viewModel.note.note,
+                label = stringResource(R.string.note),
+                onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteNoteChange(newValue)) },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                ),
+                height = 160.dp,
+                singleLine = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = 4.dp
+                    )
+            )
+            Text(
+                text = stringResource(R.string.add_photo),
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable {
+                    if (viewModel.note.id != NEW_ID) {
+                        launcher.launch("image/*")
+                    } else {
+                        openDialogNewNote = true
+                    }
+                },
+            )
+
+            LazyRow {
+                items(viewModel.photos) { photo ->
+                    ShowPhoto(
+                        photo,
+                        onClick = { value ->
+                            when (value) {
+                                MAIN ->
+                                    viewModel.onEvent(
+                                        NoteEvent.OnNoteSetMainPhoto(
+                                            noteId = photo.noteId,
+                                            id = photo.id
+                                        )
+                                    )
+
+                                VIEW -> toPhoto(PhotoDestination(photo.noteId, photo.photoPath))
+
+                                DELETE -> {
+                                    selectedPhoto = photo
+                                    openDialogDeletePhoto = true
+                                }
+                            }
+                        }
+                    )
+                }
+            }
+            HorizontalDivider(
+                thickness = 1.dp,
+            )
+            OkAndCancel(
+                titleOk = stringResource(R.string.save),
+                enabledOk = true,
+                onOK = { viewModel.onEvent(NoteEvent.OnNoteSave) },
+                onCancel = { toNoteList() },
+            )
         }
     }
     if (showDatePicker) {
@@ -287,7 +288,7 @@ fun NoteScreen(
             onClickCancel = { showDatePicker = false }
         )
     }
-    if (openDialog) {
+    if (openDialogNewNote) {
         DialogText(
             text = "Заметка ещё не сохранена, чтобы добавить фото надо сначала сохранить заметку.\n\tСохранить?",
             showCancel = true,
@@ -296,9 +297,24 @@ fun NoteScreen(
             titleCancel = stringResource(R.string.no),
             onOK = {
                 viewModel.onEvent(NoteEvent.OnNoteSave)
-                openDialog = false
+                openDialogNewNote = false
             },
-            onCancel = { openDialog = false },
+            onCancel = { openDialogNewNote = false },
+        )
+    }
+    if (openDialogDeletePhoto) {
+        toLog("selectedPhoto: $selectedPhoto")
+        DialogText(
+            text = "Вы действительно хотите удалить фотографию из заметки?",
+            showCancel = true,
+            onDismiss = {},
+            titleOK = stringResource(R.string.yes),
+            titleCancel = stringResource(R.string.no),
+            onOK = {
+                viewModel.onEvent(NoteEvent.OnNotePhotoDelete(selectedPhoto))
+                openDialogDeletePhoto = false
+            },
+            onCancel = { openDialogDeletePhoto = false },
         )
     }
 }
@@ -339,6 +355,7 @@ private fun SetParameter(
     value: String,
     label: String,
     width: Dp = 48.dp,
+    keyboardType: KeyboardType = KeyboardType.Unspecified,
     onChange: (String) -> Unit
 ) {
     Text(label)
@@ -347,7 +364,7 @@ private fun SetParameter(
         onChange = { newValue -> onChange(newValue) },
         textAlign = TextAlign.Center,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
+            keyboardType = keyboardType,
         ),
         height = 40.dp,
         modifier = Modifier
