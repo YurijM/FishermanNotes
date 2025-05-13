@@ -67,7 +67,7 @@ import com.mu.fishermannotes.R
 import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.presentation.component.DialogText
 import com.mu.fishermannotes.presentation.component.OkAndCancel
-import com.mu.fishermannotes.presentation.component.OutlinedTextField
+import com.mu.fishermannotes.presentation.component.OutlinedTextEdit
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
 import com.mu.fishermannotes.presentation.component.DropDownList
@@ -159,7 +159,7 @@ fun NoteScreen(
                     date = viewModel.note.date,
                     onClick = { showDatePicker = true }
                 )
-                OutlinedTextField(
+                OutlinedTextEdit(
                     value = viewModel.note.location,
                     label = stringResource(R.string.location),
                     onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteLocationChange(newValue)) },
@@ -211,7 +211,7 @@ fun NoteScreen(
                         modifier = Modifier.fillMaxWidth(.75f)
                     )
                 }
-                OutlinedTextField(
+                OutlinedTextEdit(
                     value = viewModel.note.note,
                     label = stringResource(R.string.note),
                     onChange = { newValue -> viewModel.onEvent(NoteEvent.OnNoteNoteChange(newValue)) },
@@ -342,7 +342,7 @@ private fun SetParameter(
     onChange: (String) -> Unit
 ) {
     Text(label)
-    OutlinedTextField(
+    OutlinedTextEdit(
         value = value,
         onChange = { newValue -> onChange(newValue) },
         textAlign = TextAlign.Center,

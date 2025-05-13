@@ -24,5 +24,5 @@ val WINGS = listOf(
     "северо-западный"
 )
 val MOON = listOf("", "новолуние", "растущая луна", "полнолуние", "убывающая луна")
-val NOTE_LIST_IS_EMPTY = "Ни одна заметка ещё не добавлена"
-val NOTE_SEARCH_NOTHING = "Ни одна заметка ещё не добавлена"
+const val NOTE_LIST_IS_EMPTY = "Ни одна заметка ещё не добавлена"
+const val NOTE_FIND_NOTHING = "Ничего не найдено"

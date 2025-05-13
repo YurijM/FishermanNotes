@@ -9,7 +9,7 @@ import com.mu.fishermannotes.data.entity.NoteEntity
 import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
 import com.mu.fishermannotes.presentation.utils.NOTE_LIST_IS_EMPTY
-import com.mu.fishermannotes.presentation.utils.NOTE_SEARCH_NOTHING
+import com.mu.fishermannotes.presentation.utils.NOTE_FIND_NOTHING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,6 +47,13 @@ class NoteListViewModel @Inject constructor(
                             noteListIsEmpty = NOTE_LIST_IS_EMPTY
                         }
                     }
+                } else {
+                    viewModelScope.launch {
+                        noteRepository.searchNotes("%${search}%").collect { list ->
+                            notes = list
+                            noteListIsEmpty = NOTE_FIND_NOTHING
+                        }
+                    }
                 }
             }
 
@@ -54,7 +61,7 @@ class NoteListViewModel @Inject constructor(
                 viewModelScope.launch {
                     noteRepository.searchNotes(search).collect { list ->
                         notes = list
-                        noteListIsEmpty = NOTE_SEARCH_NOTHING
+                        noteListIsEmpty = NOTE_FIND_NOTHING
                     }
                 }
             }

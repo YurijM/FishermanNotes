@@ -21,8 +21,8 @@ interface NoteDao {
     fun getNote(id: Long): Flow<NoteEntity>
 
     @Query("SELECT * FROM table_notes " +
-            "WHERE location LIKE '%' + :search + '%' " +
-            "OR note LIKE '%' + :search + '%'")
+            "WHERE location LIKE :search " +
+            "OR note LIKE :search")
     fun searchNotes(search: String): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM table_photos " +

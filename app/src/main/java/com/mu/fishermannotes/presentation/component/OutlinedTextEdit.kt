@@ -32,7 +32,7 @@ import com.mu.fishermannotes.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OutlinedTextField(
+fun OutlinedTextEdit(
     modifier: Modifier = Modifier,
     value: String = "",
     onChange: (String) -> Unit,

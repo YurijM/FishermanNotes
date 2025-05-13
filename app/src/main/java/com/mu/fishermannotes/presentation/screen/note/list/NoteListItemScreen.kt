@@ -60,10 +60,6 @@ fun NoteListItemScreen(
             if (note.pressure.isBlank()) 0 else 1 +
             if (note.wing.isBlank()) 0 else 1 +
             if (note.moon.isBlank()) 0 else 1
-    /*val paramsAreBlank = note.temperature.isBlank()
-            && note.pressure.isBlank()
-            && note.wing.isBlank()
-            && note.moon.isBlank()*/
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
@@ -73,7 +69,10 @@ fun NoteListItemScreen(
         ),
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 8.dp)
+            .padding(
+                horizontal = 4.dp,
+                vertical = 8.dp
+            )
             .clickable { onEdit() },
     ) {
         Row(
@@ -104,11 +103,10 @@ fun NoteListItemScreen(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .border(
                                 1.dp,
-                                MaterialTheme.colorScheme.error,
+                                MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(50)
                             )
                             .padding(8.dp)
