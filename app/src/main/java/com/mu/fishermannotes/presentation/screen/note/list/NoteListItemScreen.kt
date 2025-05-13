@@ -22,6 +22,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.mu.fishermannotes.R
 import com.mu.fishermannotes.data.entity.NoteEntity
 import com.mu.fishermannotes.data.entity.NotePhotoEntity
+import com.mu.fishermannotes.presentation.component.DialogText
 import com.mu.fishermannotes.presentation.utils.asDate
 
 @Composable
@@ -50,6 +55,7 @@ fun NoteListItemScreen(
     onEdit: () -> Unit,
     onDelete: () -> Unit,
 ) {
+    var openDialog by remember { mutableStateOf(false) }
     val paramsCount = if (note.temperature.isBlank()) 0 else 1 +
             if (note.pressure.isBlank()) 0 else 1 +
             if (note.wing.isBlank()) 0 else 1 +
@@ -93,7 +99,7 @@ fun NoteListItemScreen(
                     contentScale = ContentScale.Crop,
                 )
                 IconButton(
-                    onClick = { onDelete() }
+                    onClick = { openDialog = true }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -184,5 +190,19 @@ fun NoteListItemScreen(
                 )
             }
         }
+    }
+    if (openDialog) {
+        DialogText(
+            text = "Вы действительно хотите удалить заметку от ${note.date.asDate()}?",
+            showCancel = true,
+            onDismiss = {},
+            titleOK = stringResource(R.string.yes),
+            titleCancel = stringResource(R.string.no),
+            onOK = {
+                onDelete()
+                openDialog = false
+            },
+            onCancel = { openDialog = false },
+        )
     }
 }
