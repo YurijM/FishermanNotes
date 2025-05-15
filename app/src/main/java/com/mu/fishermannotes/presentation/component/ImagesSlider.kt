@@ -1,16 +1,19 @@
 package com.mu.fishermannotes.presentation.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -31,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @Composable
@@ -56,15 +60,31 @@ fun ImagesSlider(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Row(
+        /*Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-        ) {
+            modifier = modifier.fillMaxWidth()
+        ) {*/
+            /*IconButton(
+                enabled = pagerState.canScrollBackward,
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = backwardIcon,
+                    contentDescription = "back"
+                )
+            }*/
             HorizontalPager(
                 state = pagerState,
                 contentPadding = pagePaddingValues,
-                modifier = modifier.fillMaxSize()
+                //modifier = modifier.fillMaxSize()
+                modifier = modifier.weight(1f)
             ) { page ->
                 val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
                 val scaleFactor = 0.75f + (1f - 0.75f) * (1f - pageOffset.absoluteValue)
@@ -96,6 +116,42 @@ fun ImagesSlider(
                             .clickable { onClick(imageList[page]) }
                     )
                 }
+            }
+            /*IconButton(
+                enabled = pagerState.currentPage != imageList.size - 1,
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = forwardIcon,
+                    contentDescription = "forward"
+                )
+            }*/
+        //}
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = modifier
+                .height(48.dp)
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            repeat(imageList.size) {
+                val color = if (pagerState.currentPage == it) dotsActiveColor else dotsInactiveColor
+                Box(
+                    modifier = modifier
+                        .padding(2.dp)
+                        .clip(CircleShape)
+                        .size(dotSize)
+                        .background(color)
+                        .clickable {
+                            scope.launch {
+                                pagerState.animateScrollToPage(it)
+                            }
+                        }
+                )
             }
         }
     }
