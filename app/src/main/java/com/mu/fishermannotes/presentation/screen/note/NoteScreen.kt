@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -66,12 +65,12 @@ import coil.compose.rememberAsyncImagePainter
 import com.mu.fishermannotes.R
 import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.presentation.component.DialogText
+import com.mu.fishermannotes.presentation.component.DropDownList
 import com.mu.fishermannotes.presentation.component.OkAndCancel
 import com.mu.fishermannotes.presentation.component.OutlinedTextEdit
 import com.mu.fishermannotes.presentation.component.SetDate
 import com.mu.fishermannotes.presentation.component.Title
-import com.mu.fishermannotes.presentation.component.DropDownList
-import com.mu.fishermannotes.presentation.navigation.Destinations.PhotoDestination
+import com.mu.fishermannotes.presentation.navigation.Destinations.SliderDestination
 import com.mu.fishermannotes.presentation.utils.DELETE
 import com.mu.fishermannotes.presentation.utils.MAIN
 import com.mu.fishermannotes.presentation.utils.MOON
@@ -87,7 +86,7 @@ import com.mu.fishermannotes.presentation.utils.toLog
 fun NoteScreen(
     viewModel: NoteViewModel = hiltViewModel(),
     toNoteList: () -> Unit,
-    toPhoto: (PhotoDestination) -> Unit,
+    toSlider: (SliderDestination) -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
@@ -241,7 +240,9 @@ fun NoteScreen(
             )
 
             LazyRow {
-                items(viewModel.photos) { photo ->
+                //items(viewModel.photos) { photo ->
+                items(viewModel.photos.size) { idx ->
+                    val photo = viewModel.photos[idx]
                     ShowPhoto(
                         photo,
                         onClick = { value ->
@@ -254,7 +255,13 @@ fun NoteScreen(
                                         )
                                     )
 
-                                VIEW -> toPhoto(PhotoDestination(photo.noteId, photo.photoPath))
+                                VIEW -> {
+                                    val list = emptyList<String>().toMutableList()
+                                    viewModel.photos.forEach { photo ->
+                                        list.add(photo.photoPath)
+                                    }
+                                    toSlider(SliderDestination(photo.noteId, list, idx))
+                                }
 
                                 DELETE -> {
                                     selectedPhoto = photo

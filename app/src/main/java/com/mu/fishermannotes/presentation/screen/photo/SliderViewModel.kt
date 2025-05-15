@@ -8,8 +8,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PhotoViewModel @Inject constructor(
+class SliderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    val path = savedStateHandle.toRoute<Destinations.PhotoDestination>().path
+    val args = savedStateHandle.toRoute<Destinations.SliderDestination>()
+    val path = args.path
+    val startPhoto = args.startPhoto
 }

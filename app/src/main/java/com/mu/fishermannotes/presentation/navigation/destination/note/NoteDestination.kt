@@ -7,12 +7,12 @@ import com.mu.fishermannotes.presentation.screen.note.NoteScreen
 
 fun NavGraphBuilder.note(
     toNoteList: () -> Unit,
-    toPhoto: (Destinations.PhotoDestination) -> Unit
+    toSlider: (Destinations.SliderDestination) -> Unit
 ) {
     composable<Destinations.NoteDestination> {
         NoteScreen(
             toNoteList = toNoteList,
-            toPhoto = toPhoto,
+            toSlider = toSlider,
         )
     }
 }

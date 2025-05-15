@@ -50,7 +50,6 @@ class NoteViewModel @Inject constructor(
             }
             viewModelScope.launch {
                 toLog("getPhotos -> noteId -> before: $noteId")
-                //noteRepository.getPhotos(noteId).first()
                 noteRepository.getPhotos(noteId).collect { list ->
                     photos = list
                     toLog("getPhotos -> noteId -> after: $noteId")
