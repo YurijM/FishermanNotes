@@ -56,10 +56,10 @@ fun NoteListItemScreen(
     onDelete: () -> Unit,
 ) {
     var openDialog by remember { mutableStateOf(false) }
-    val paramsCount = if (note.temperature.isBlank()) 0 else 1 +
+    /*val paramsCount = if (note.temperature.isBlank()) 0 else 1 +
             if (note.pressure.isBlank()) 0 else 1 +
             if (note.wing.isBlank()) 0 else 1 +
-            if (note.moon.isBlank()) 0 else 1
+            if (note.moon.isBlank()) 0 else 1*/
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
@@ -92,26 +92,11 @@ fun NoteListItemScreen(
                         painterResource(R.drawable.fishing),
                     contentDescription = null,
                     modifier = Modifier
-                        .padding(bottom = (4 * paramsCount).dp)
+                        //.padding(bottom = (4 * paramsCount).dp)
                         .requiredSize(dimensionResource(id = R.dimen.medium_size_photo))
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop,
                 )
-                IconButton(
-                    onClick = { openDialog = true }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .border(
-                                1.dp,
-                                MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(50)
-                            )
-                            .padding(8.dp)
-                    )
-                }
             }
             Column(
                 modifier = Modifier
@@ -121,24 +106,46 @@ fun NoteListItemScreen(
                         vertical = 4.dp
                     ),
             ) {
-                Text(
-                    text = note.date.asDate(),
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.End,
-                    lineHeight = 1.em,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Text(
-                    text = note.location,
-                    maxLines = 2,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 1.em,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(
+                        modifier = Modifier.weight(4f)
+                    ) {
+                        Text(
+                            text = note.date.asDate(),
+                            fontWeight = FontWeight.Bold,
+                            lineHeight = 1.em,
+                        )
+                        Text(
+                            text = note.location,
+                            maxLines = 1,
+                            fontWeight = FontWeight.Bold,
+                            lineHeight = 1.em,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    IconButton(
+                        onClick = { openDialog = true },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .border(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.primary,
+                                    shape = RoundedCornerShape(50)
+                                )
+                                .padding(8.dp)
+                        )
+                    }
+                }
                 HorizontalDivider(
                     thickness = 1.dp,
-                    color = Color.LightGray,
+                    color = Color.Gray,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
                 if (note.temperature.isNotBlank())
@@ -173,21 +180,22 @@ fun NoteListItemScreen(
                         lineHeight = 1.em,
                         modifier = Modifier.fillMaxWidth()
                     )
-                if (paramsCount > 0)
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = Color.LightGray,
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                Text(
-                    text = note.note,
-                    maxLines = 3,
-                    lineHeight = 1.em,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
         }
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+        Text(
+            text = note.note,
+            maxLines = 2,
+            lineHeight = 1.em,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
     }
     if (openDialog) {
         DialogText(

@@ -119,12 +119,13 @@ fun NoteScreen(
     LaunchedEffect(key1 = viewModel.note, key2 = viewModel.exit) {
         datePickerState.selectedDateMillis = viewModel.note.date
 
-        toLog("Screen -> LaunchedEffect")
-        if (viewModel.newNote && viewModel.noteId != NEW_ID && viewModel.photos.isEmpty()) {
-            launcher.launch("image/*")
+        if (viewModel.exit) {
+            toNoteList()
+        } else {
+            if (viewModel.newNote && viewModel.noteId != NEW_ID && viewModel.photos.isEmpty()) {
+                launcher.launch("image/*")
+            }
         }
-
-        if (viewModel.exit) toNoteList()
     }
 
     Card(
@@ -240,7 +241,6 @@ fun NoteScreen(
             )
 
             LazyRow {
-                //items(viewModel.photos) { photo ->
                 items(viewModel.photos.size) { idx ->
                     val photo = viewModel.photos[idx]
                     ShowPhoto(
@@ -278,7 +278,7 @@ fun NoteScreen(
             OkAndCancel(
                 titleOk = stringResource(R.string.save),
                 enabledOk = true,
-                onOK = { viewModel.onEvent(NoteEvent.OnNoteSave) },
+                onOK = { viewModel.onEvent(NoteEvent.OnNoteSave(false)) },
                 onCancel = { toNoteList() },
             )
         }
@@ -303,7 +303,7 @@ fun NoteScreen(
             titleOK = stringResource(R.string.yes),
             titleCancel = stringResource(R.string.no),
             onOK = {
-                viewModel.onEvent(NoteEvent.OnNoteSave)
+                viewModel.onEvent(NoteEvent.OnNoteSave(true))
                 openDialogNewNote = false
             },
             onCancel = { openDialogNewNote = false },

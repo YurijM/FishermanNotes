@@ -13,5 +13,5 @@ sealed class NoteEvent {
     data class OnNotePhotoSave(val photo: NotePhotoEntity) : NoteEvent()
     data class OnNotePhotoDelete(val photo: NotePhotoEntity) : NoteEvent()
     data class OnNoteSetMainPhoto(val noteId: Long, val id: Long) : NoteEvent()
-    data object OnNoteSave : NoteEvent()
+    data class OnNoteSave(val beforeSaveFirstPhoto: Boolean = false) : NoteEvent()
 }

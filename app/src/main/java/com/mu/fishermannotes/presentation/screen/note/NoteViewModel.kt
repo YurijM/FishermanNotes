@@ -13,7 +13,6 @@ import com.mu.fishermannotes.data.entity.NotePhotoEntity
 import com.mu.fishermannotes.domain.repository.NoteRepository
 import com.mu.fishermannotes.presentation.navigation.Destinations.NoteDestination
 import com.mu.fishermannotes.presentation.utils.NEW_ID
-import com.mu.fishermannotes.presentation.utils.toLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -35,7 +34,6 @@ class NoteViewModel @Inject constructor(
 
     init {
         noteId = savedStateHandle.toRoute<NoteDestination>().id
-        toLog("start -> noteId: $noteId")
         newNote = noteId == NEW_ID
 
         if (newNote) {
@@ -49,10 +47,8 @@ class NoteViewModel @Inject constructor(
                 }
             }
             viewModelScope.launch {
-                toLog("getPhotos -> noteId -> before: $noteId")
                 noteRepository.getPhotos(noteId).collect { list ->
                     photos = list
-                    toLog("getPhotos -> noteId -> after: $noteId")
                 }
             }
         }
@@ -94,7 +90,6 @@ class NoteViewModel @Inject constructor(
 
                     if (newNote) {
                         photos = photos.toMutableList() + event.photo
-                        toLog("OnNotePhotoSave -> photos: $photos")
                     }
                 }
             }
@@ -113,6 +108,9 @@ class NoteViewModel @Inject constructor(
 
             is NoteEvent.OnNoteSave -> {
                 if (noteId == NEW_ID) {
+                    if (!event.beforeSaveFirstPhoto)
+                        exit = true
+
                     viewModelScope.launch {
                         noteId = noteRepository.insert(note)
                         note = note.copy(id = noteId)
