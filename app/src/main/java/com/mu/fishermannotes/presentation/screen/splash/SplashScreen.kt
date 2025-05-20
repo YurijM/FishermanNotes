@@ -2,6 +2,10 @@ package com.mu.fishermannotes.presentation.screen.splash
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,17 +32,30 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.mu.fishermannotes.R
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mu.fishermannotes.R
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     toMain: () -> Unit
 ) {
+    val infiniteTransition = rememberInfiniteTransition()
+    val angle = infiniteTransition.animateFloat(
+        initialValue = 0F,
+        targetValue = 360F,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000, easing = LinearEasing)
+        )
+    )
+
+
     val scale = remember {
+        Animatable(0f)
+    }
+    val scaleFish = remember {
         Animatable(0f)
     }
     val scaleText = remember {
@@ -59,7 +77,16 @@ fun SplashScreen(
         }
     }
 
-    LaunchedEffect (key1 = true) {
+    LaunchedEffect(key1 = true) {
+        scaleFish.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 3000,
+                easing = {
+                    OvershootInterpolator(3f).getInterpolation(it)
+                }
+            )
+        )
         scale.animateTo(
             targetValue = 1f,
             animationSpec = tween(
@@ -82,7 +109,7 @@ fun SplashScreen(
         toMain()
     }
 
-    Surface (
+    Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
         Column(
@@ -94,7 +121,12 @@ fun SplashScreen(
             Image(
                 painter = painterResource(id = R.drawable.fish),
                 contentDescription = "Title",
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    /*.graphicsLayer {
+                        rotationZ = angle.value
+                    }*/
+                    .scale(scaleFish.value)
             )
             Text(
                 text = stringResource(R.string.app_name),
@@ -110,7 +142,8 @@ fun SplashScreen(
                 Image(
                     painter = painterResource(id = R.drawable.author),
                     contentDescription = "Logo",
-                    modifier = Modifier.scale(scale.value),
+                    modifier = Modifier.scale(scale.value)
+                        .rotate(angle.value),
                 )
                 AssistChip(
                     modifier = Modifier
