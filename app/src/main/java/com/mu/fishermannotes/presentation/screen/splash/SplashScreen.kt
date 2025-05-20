@@ -81,7 +81,7 @@ fun SplashScreen(
         scaleFish.animateTo(
             targetValue = 1f,
             animationSpec = tween(
-                durationMillis = 3000,
+                durationMillis = 2000,
                 easing = {
                     OvershootInterpolator(3f).getInterpolation(it)
                 }
@@ -90,7 +90,7 @@ fun SplashScreen(
         scale.animateTo(
             targetValue = 1f,
             animationSpec = tween(
-                durationMillis = 3000,
+                durationMillis = 2000,
                 easing = {
                     OvershootInterpolator(14f).getInterpolation(it)
                 }
@@ -99,7 +99,7 @@ fun SplashScreen(
         scaleText.animateTo(
             targetValue = .85f,
             animationSpec = tween(
-                durationMillis = 3000,
+                durationMillis = 2000,
                 easing = {
                     OvershootInterpolator(5f).getInterpolation(it)
                 }
