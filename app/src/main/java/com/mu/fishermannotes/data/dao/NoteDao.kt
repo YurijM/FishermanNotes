@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM table_notes")
+    @Query("SELECT * FROM table_notes " +
+            "ORDER BY date DESC")
     fun getNotes(): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM table_notes " +
@@ -22,7 +23,8 @@ interface NoteDao {
 
     @Query("SELECT * FROM table_notes " +
             "WHERE location LIKE :search " +
-            "OR note LIKE :search")
+            "OR note LIKE :search " +
+            "ORDER BY date DESC")
     fun searchNotes(search: String): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM table_photos " +
